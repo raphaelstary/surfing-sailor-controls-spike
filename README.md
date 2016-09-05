@@ -1,4 +1,4 @@
-highfive.js
+pongy paddle
 ===========
 
-game engine
+a different take on pong & flappy bird
