@@ -72,6 +72,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, createWorld) {
         this.wallCollision = this.events.subscribe(Event.TICK_COLLISION,
             wrapper.world.checkCollisions.bind(wrapper.world));
         this.paddleForce = this.events.subscribe(Event.RESIZE, wrapper.controller.resize.bind(wrapper.controller));
+        this.ballForce = this.events.subscribe(Event.RESIZE, wrapper.builder.resize.bind(wrapper.builder));
         this.gravity = this.events.subscribe(Event.RESIZE, wrapper.world.resize.bind(wrapper.world));
 
         wrapper.builder.createDefaultWalls();
@@ -87,6 +88,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, createWorld) {
         this.events.unsubscribe(this.playerBallCollision);
         this.events.unsubscribe(this.wallCollision);
         this.events.unsubscribe(this.paddleForce);
+        this.events.unsubscribe(this.ballForce);
         this.events.unsubscribe(this.gravity);
         this.world.preDestroy();
     };

@@ -1,13 +1,19 @@
 G.Builder = (function (Vectors, range, UI, Math, Width, Height, wrap) {
     "use strict";
 
-    function Builder(stage, scenery, balls, obstacles) {
+    function Builder(stage, device, scenery, balls, obstacles) {
         this.stage = stage;
 
         this.scenery = scenery;
         this.balls = balls;
         this.obstacles = obstacles;
+
+        this.resize(device);
     }
+
+    Builder.prototype.resize = function (event) {
+        this.magnitude = Math.floor(event.height / UI.HEIGHT * UI.MAGNITUDE);
+    };
 
     Builder.prototype.__createWall = function (xFn, yFn, widthFn, heightFn, filled) {
         return this.stage.createRectangle(filled).setColor(UI.WHITE).setPosition(xFn, yFn).setWidth(widthFn)
@@ -69,8 +75,6 @@ G.Builder = (function (Vectors, range, UI, Math, Width, Height, wrap) {
         return drawable;
     };
 
-    var magnitude = 8;
-
     Builder.prototype.createStartBall = function () {
         var randomDegrees = range(50, 60);
         var angle = Vectors.toRadians(randomDegrees);
@@ -78,8 +82,8 @@ G.Builder = (function (Vectors, range, UI, Math, Width, Height, wrap) {
             x: 300,
             y: 100
         }, {
-            x: Vectors.getX(0, magnitude, angle),
-            y: Vectors.getY(0, magnitude, angle)
+            x: Vectors.getX(0, this.magnitude, angle),
+            y: Vectors.getY(0, this.magnitude, angle)
         });
     };
 
@@ -90,8 +94,8 @@ G.Builder = (function (Vectors, range, UI, Math, Width, Height, wrap) {
             x: 300,
             y: 100
         }, {
-            x: Vectors.getX(0, magnitude, angle),
-            y: Vectors.getY(0, magnitude, angle)
+            x: Vectors.getX(0, this.magnitude, angle),
+            y: Vectors.getY(0, this.magnitude, angle)
         });
     };
 
@@ -111,8 +115,8 @@ G.Builder = (function (Vectors, range, UI, Math, Width, Height, wrap) {
             x: 300,
             y: 100
         }, {
-            x: Vectors.getX(0, magnitude, angle),
-            y: Vectors.getY(0, magnitude, angle)
+            x: Vectors.getX(0, this.magnitude, angle),
+            y: Vectors.getY(0, this.magnitude, angle)
         });
     };
 

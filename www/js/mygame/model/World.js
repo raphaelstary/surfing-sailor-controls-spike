@@ -16,7 +16,20 @@ G.World = (function (Math, Object, Vectors, UI) {
     var airResistance = 0.9;
 
     World.prototype.resize = function (event) {
-        this.gravity = Math.floor(event.height / UI.HEIGHT * UI.GRAVITY);
+        var one = event.height / UI.HEIGHT;
+
+        this.gravity = Math.floor(one * UI.GRAVITY);
+
+        var widthHalf = UI.WIDTH / 2 * one;
+        var screenWidthHalf = event.width / 2;
+
+        var tile = Math.floor(one * UI.TILE);
+
+        this.cornerX = Math.floor(screenWidthHalf - widthHalf) + tile;
+        this.endX = Math.floor(screenWidthHalf + widthHalf) - tile;
+
+        this.cornerY = tile;
+        this.endY = event.height - tile;
     };
 
     World.prototype.updatePlayerMovement = function () {
@@ -124,9 +137,19 @@ G.World = (function (Math, Object, Vectors, UI) {
         this.scenery.concat(this.obstacles).forEach(function (element) {
             this.balls.forEach(function (ball) {
                 var widthHalf = ball.getWidthHalf();
-                var heightHalf = ball.getHeightHalf();
+                //noinspection JSSuspiciousNameCombination
+                var heightHalf = widthHalf;
                 if (ball.x + widthHalf > element.getCornerX() && ball.x - widthHalf < element.getEndX() &&
                     ball.y + heightHalf > element.getCornerY() && ball.y - heightHalf < element.getEndY()) {
+
+                    if (ball.x - widthHalf < this.cornerX)
+                        ball.x = this.cornerX + widthHalf;
+                    if (ball.x + widthHalf > this.endX)
+                        ball.x = this.endX - widthHalf;
+                    if (ball.y - heightHalf < this.cornerY)
+                        ball.y = this.cornerY + heightHalf;
+                    if (ball.y + heightHalf > this.endY)
+                        ball.y = this.endY - heightHalf;
 
                     if (element.getWidth() > element.getHeight()) {
                         ball.forceY *= -1;

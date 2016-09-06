@@ -6,7 +6,7 @@ G.createWorld = (function (Builder, PlayerController, World) {
         var scenery = [];
         var balls = [];
         var obstacles = [];
-        var builder = new Builder(stage, scenery, balls, obstacles);
+        var builder = new Builder(stage, device, scenery, balls, obstacles);
         var player = builder.createPlayer();
         var playerController = new PlayerController(device, player, builder);
         return {
