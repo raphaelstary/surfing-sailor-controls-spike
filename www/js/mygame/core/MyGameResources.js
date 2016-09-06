@@ -1,19 +1,25 @@
-G.MyGameResources = (function () {
+G.MyGameResources = (function (File, UI, URL, addFontToDOM) {
     "use strict";
 
-    // your files
+    var font, scenes;
 
     function registerFiles(resourceLoader) {
-        // add your files to the resource loader for downloading
-
-        return resourceLoader.getCount(); // number of registered files
+        font = resourceLoader.addFont(File.FONT);
+        scenes = resourceLoader.addJSON(File.SCENES);
+        return resourceLoader.getCount();
     }
 
     function processFiles() {
-        // process your downloaded files
-
+        if (URL) {
+            addFontToDOM([
+                {
+                    name: UI.FONT,
+                    url: URL.createObjectURL(font.blob)
+                }
+            ]);
+        }
         return {
-            // services created with downloaded files
+            scenes: scenes
         };
     }
 
@@ -21,4 +27,4 @@ G.MyGameResources = (function () {
         create: registerFiles,
         process: processFiles
     };
-})();
+})(G.File, G.UI, window.URL || window.webkitURL, H5.addFontToDOM);
