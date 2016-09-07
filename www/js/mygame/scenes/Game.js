@@ -67,13 +67,14 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, createWorld) {
             wrapper.world.updatePlayerMovement.bind(wrapper.world));
         this.ballMovement = this.events.subscribe(Event.TICK_MOVE,
             wrapper.world.updateBallMovement.bind(wrapper.world));
-        this.playerBallCollision = this.events.subscribe(Event.TICK_COLLISION,
+        this.playerBallCollision = this.events.subscribe(Event.TICK_CAMERA,
             wrapper.world.checkBallPaddleCollision.bind(wrapper.world));
         this.wallCollision = this.events.subscribe(Event.TICK_COLLISION,
             wrapper.world.checkCollisions.bind(wrapper.world));
         this.paddleForce = this.events.subscribe(Event.RESIZE, wrapper.controller.resize.bind(wrapper.controller));
         this.ballForce = this.events.subscribe(Event.RESIZE, wrapper.builder.resize.bind(wrapper.builder));
-        this.gravity = this.events.subscribe(Event.RESIZE, wrapper.world.resize.bind(wrapper.world));
+
+        this.gravityForce = this.events.subscribe(Event.RESIZE, wrapper.world.resize.bind(wrapper.world));
 
         wrapper.builder.createDefaultWalls();
         wrapper.builder.createRandomBall();
@@ -89,7 +90,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, createWorld) {
         this.events.unsubscribe(this.wallCollision);
         this.events.unsubscribe(this.paddleForce);
         this.events.unsubscribe(this.ballForce);
-        this.events.unsubscribe(this.gravity);
+        this.events.unsubscribe(this.gravityForce);
         this.world.preDestroy();
     };
 

@@ -75,47 +75,148 @@ G.World = (function (Math, Object, Vectors, UI) {
             var ballHeightHalf = ball.getHeightHalf();
 
             var player = this.player;
-            var widthHalf = player.getWidthHalf();
-            var heightHalf = player.getHeightHalf();
+            var playerWidthHalf = player.getWidthHalf();
+            var playerHeightHalf = player.getHeightHalf();
 
-            if (player.x + widthHalf > ball.x - ballWidthHalf && player.x - widthHalf < ball.x + ballWidthHalf &&
-                player.y + heightHalf > ball.y - ballHeightHalf && player.y - heightHalf < ball.y + ballHeightHalf) {
+            var playerBoundingLeft, playerBoundingTop, playerBoundingRight, playerBoundingBottom;
+            if (player.x > player.lastX) {
+                // lastX is left & x is right
+                playerBoundingLeft = player.lastX - playerWidthHalf;
+                playerBoundingRight = player.x + playerWidthHalf;
+            } else {
+                // x is left & lastX is right
+                playerBoundingLeft = player.x - playerWidthHalf;
+                playerBoundingRight = player.lastX + playerWidthHalf;
+            }
+            if (player.y > player.lastY) {
+                // lastY is up & y is down
+                playerBoundingTop = player.lastY - playerHeightHalf;
+                playerBoundingBottom = player.y + playerHeightHalf;
+            } else {
+                // y is up & lastY is down
+                playerBoundingTop = player.y - playerHeightHalf;
+                playerBoundingBottom = player.lastY + playerHeightHalf;
+            }
 
-                // play paddle
-                var b4_y = ball.y + ballHeightHalf;
-                var b1_y = ball.y - ballHeightHalf;
-                var b4_x = ball.x - ballWidthHalf;
-                var b1_x = b4_x;
-                var b2_x = ball.x + ballWidthHalf;
-                var b3_x = b2_x;
-                var b2_y = b1_y;
-                var b3_y = b4_y;
+            var ballBoundingLeft, ballBoundingTop, ballBoundingRight, ballBoundingBottom;
+            if (ball.x > ball.lastX) {
+                // lastX is left & x is right
+                ballBoundingLeft = ball.lastX - ballWidthHalf;
+                ballBoundingRight = ball.x + ballWidthHalf;
+            } else {
+                // x is left & lastX is right
+                ballBoundingLeft = ball.x - ballWidthHalf;
+                ballBoundingRight = ball.lastX + ballWidthHalf;
+            }
+            if (ball.y > ball.lastY) {
+                // lastY is up & y is down
+                ballBoundingTop = ball.lastY - ballHeightHalf;
+                ballBoundingBottom = ball.y + ballHeightHalf;
+            } else {
+                // y is up & lastY is down
+                ballBoundingTop = ball.y - ballHeightHalf;
+                ballBoundingBottom = ball.lastY + ballHeightHalf;
+            }
 
-                var p;
+            var isBallLeftOfPlayer = ballBoundingRight < playerBoundingLeft;
+            var isBallRightOfPlayer = ballBoundingLeft > playerBoundingRight;
+            var isBallOverPlayer = ballBoundingBottom < playerBoundingTop;
+            var isBallUnderPlayer = ballBoundingTop > playerBoundingBottom;
 
-                if (player.lastY + heightHalf <= ball.y - ballHeightHalf &&
-                    player.y + heightHalf > ball.y - ballHeightHalf) {
+            if (!(isBallLeftOfPlayer || isBallRightOfPlayer || isBallOverPlayer || isBallUnderPlayer)) {
 
-                    if (ball.forceY < 0)
+                var lastBallLeft = ball.lastX - ballWidthHalf;
+                var lastBallRight = ball.lastX + ballWidthHalf;
+                var lastBallTop = ball.lastY - ballHeightHalf;
+                var lastBallBottom = ball.lastY + ballHeightHalf;
+
+                var lastPlayerLeft = player.lastX - playerWidthHalf;
+                var lastPlayerRight = player.lastX + playerWidthHalf;
+                var lastPlayerTop = player.lastY - playerHeightHalf;
+                var lastPlayerBottom = player.lastY + playerHeightHalf;
+
+                var wasBallLeftOfPlayer = lastBallRight < lastPlayerLeft;
+                var wasBallRightOfPlayer = lastBallLeft > lastPlayerRight;
+                var wasBallOverPlayer = lastBallBottom < lastPlayerTop;
+                var wasBallUnderPlayer = lastBallTop > lastPlayerBottom;
+
+                if (wasBallOverPlayer) {
+                    if (ball.forceY > 0) {
                         ball.forceY *= -1;
+                        this.paddleHitFn();
+                    }
+                    ball.y = player.y - playerHeightHalf - 2 * ballHeightHalf;
 
-                    // Collision on bottom side of player
-                    p = Vectors.getIntersectionPoint(ball.lastX, ball.lastY - ballHeightHalf, ball.x,
-                        ball.y - ballHeightHalf, b3_x, b3_y, b4_x, b4_y);
-                    ball.y = p.y + ballHeightHalf;
-
-                } else {
-
-                    if (ball.forceY > 0)
+                } else if (wasBallUnderPlayer) {
+                    if (ball.forceY < 0) {
                         ball.forceY *= -1;
+                        this.paddleHitFn();
+                    }
+                    ball.y = player.y + playerHeightHalf + 2 * ballHeightHalf;
 
-                    // Collision on top side of player
-                    p = Vectors.getIntersectionPoint(ball.lastX, ball.lastY + ballHeightHalf, ball.x,
-                        ball.y + ballHeightHalf, b1_x, b1_y, b2_x, b2_y);
-                    ball.y = p.y - ballHeightHalf;
+                } else if (wasBallLeftOfPlayer) {
+                    if (ball.forceX > 0) {
+                        ball.forceX *= -1;
+                        this.paddleHitFn();
+                    }
+                    ball.x = player.x - playerWidthHalf - 2 * ballWidthHalf;
 
+                } else if (wasBallRightOfPlayer) {
+                    if (ball.forceX < 0) {
+                        ball.forceX *= -1;
+                        this.paddleHitFn();
+                    }
+                    ball.x = player.x + playerWidthHalf + 2 * ballWidthHalf;
                 }
-                this.paddleHitFn();
+
+                var ballLeft = ball.x - ballWidthHalf;
+                var ballRight = ball.x + ballWidthHalf;
+                var ballTop = ball.y - ballHeightHalf;
+                var ballBottom = ball.y + ballHeightHalf;
+
+                // var playerLeft = player.x - playerWidthHalf;
+                // var playerRight = player.x + playerWidthHalf;
+                // var playerTop = player.y - playerHeightHalf;
+                // var playerBottom = player.y + playerHeightHalf;
+
+                // var isNowBallLeftOfPlayer = ballRight < playerLeft;
+                // var isNowBallRightOfPlayer = ballLeft > playerRight;
+                // var isNowBallOverPlayer = ballBottom < playerTop;
+                // var isNowBallUnderPlayer = ballTop > playerBottom;
+                //
+                // if (!(isNowBallLeftOfPlayer || isNowBallRightOfPlayer || isNowBallOverPlayer ||
+                // isNowBallUnderPlayer)) { console.log('EERRRRRRRROOEEER'); }
+
+                // recheck if ball is not inside scenery otherwise move player and ball
+                this.scenery.forEach(function (element) {
+
+                    if (ballRight > element.getCornerX() && ballLeft < element.getEndX() &&
+                        ballBottom > element.getCornerY() && ballTop < element.getEndY()) {
+
+                        if (ball.x - ballWidthHalf < this.cornerX)
+                            ball.x = this.cornerX + ballWidthHalf;
+                        if (ball.x + ballWidthHalf > this.endX)
+                            ball.x = this.endX - ballWidthHalf;
+                        if (ball.y - ballHeightHalf < this.cornerY)
+                            ball.y = this.cornerY + ballHeightHalf;
+                        if (ball.y + ballHeightHalf > this.endY)
+                            ball.y = this.endY - ballHeightHalf;
+
+                        if (wasBallOverPlayer) {
+                            player.y = ball.y + ballHeightHalf + playerHeightHalf + 1;
+
+                        } else if (wasBallUnderPlayer) {
+                            player.y = ball.y - ballHeightHalf - playerHeightHalf - 1;
+
+                        } else if (wasBallLeftOfPlayer) {
+                            player.x = ball.x + ballWidthHalf + playerWidthHalf + 1;
+
+                        } else if (wasBallRightOfPlayer) {
+                            player.x = ball.x - ballWidthHalf - playerWidthHalf - 1;
+                        }
+                    }
+
+                }, this);
             }
         }, this);
     };
@@ -220,7 +321,7 @@ G.World = (function (Math, Object, Vectors, UI) {
         ball.remove();
         ballArray.splice(index, 1);
 
-        if (this.balls.length <= 0)
+        // if (this.balls.length <= 0)
             this.gameOverFn();
     };
 
