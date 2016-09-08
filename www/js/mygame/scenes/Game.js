@@ -1,4 +1,4 @@
-G.Game = (function (Width, Height, Event, installPlayerKeyBoard, createWorld) {
+G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGamePad, createWorld) {
     "use strict";
 
     /** @property counter */
@@ -62,6 +62,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, createWorld) {
         var wrapper = createWorld(this.stage, this.device, count, gameOver);
 
         this.keyBoardControls = installPlayerKeyBoard(this.events, wrapper.controller);
+        this.gamePadControls = installPlayerGamePad(this.events, wrapper.controller);
 
         this.playerMovement = this.events.subscribe(Event.TICK_MOVE,
             wrapper.world.updatePlayerMovement.bind(wrapper.world));
@@ -84,6 +85,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, createWorld) {
 
     Game.prototype.preDestroy = function () {
         this.events.unsubscribe(this.keyBoardControls);
+        this.events.unsubscribe(this.gamePadControls);
         this.events.unsubscribe(this.playerMovement);
         this.events.unsubscribe(this.ballMovement);
         this.events.unsubscribe(this.playerBallCollision);
@@ -95,4 +97,4 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, createWorld) {
     };
 
     return Game;
-})(H5.Width, H5.Height, H5.Event, G.installPlayerKeyBoard, G.createWorld);
+})(H5.Width, H5.Height, H5.Event, G.installPlayerKeyBoard, G.installPlayerGamePad, G.createWorld);
