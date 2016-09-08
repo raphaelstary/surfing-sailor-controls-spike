@@ -32,6 +32,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
 
     //noinspection JSUnusedGlobalSymbols
     Game.prototype.bottomDown = function () {
+        this.controller.down();
     };
 
     /** @this Game */
