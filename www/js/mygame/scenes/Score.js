@@ -1,4 +1,4 @@
-G.Score = (function (Key, Event) {
+G.Score = (function (Key, Event, Storage, parseInt, loadInteger, localStorage, Transition) {
     "use strict";
 
     /**
@@ -23,8 +23,7 @@ G.Score = (function (Key, Event) {
 
     /** @this Score */
     Score.prototype.postConstruct = function (score) {
-        this.score.setText(score);
-        this.best.setText(score);
+
         this.new.show = false;
         this.share.show = false;
 
@@ -50,6 +49,31 @@ G.Score = (function (Key, Event) {
             }
         });
 
+        var best = loadInteger(Storage.BEST);
+        var points = parseInt(score);
+        var newRecord = points > best;
+
+        if (newRecord) {
+            localStorage.setItem(Storage.BEST, points);
+            best = points;
+
+            this.new.show = true;
+            this.new.setAlpha(1);
+            this.new.opacityPattern([
+                {
+                    value: 0.5,
+                    duration: 30,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 1,
+                    duration: 30,
+                    easing: Transition.LINEAR
+                }
+            ], true);
+        }
+
+        this.score.setText(points.toString());
+        this.best.setText(best.toString());
     };
 
     Score.prototype.preDestroy = function () {
@@ -58,4 +82,4 @@ G.Score = (function (Key, Event) {
     };
 
     return Score;
-})(H5.Key, H5.Event);
+})(H5.Key, H5.Event, G.Storage, parseInt, H5.loadInteger, H5.lclStorage, H5.Transition);
