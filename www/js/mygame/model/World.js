@@ -1,4 +1,4 @@
-G.World = (function (Math, Object, Vectors, UI) {
+G.World = (function (Math, Object, Vectors, UI, GamePlay) {
     "use strict";
 
     function World(device, player, scenery, balls, obstacles, paddleHitFn, gameOverFn) {
@@ -18,12 +18,12 @@ G.World = (function (Math, Object, Vectors, UI) {
     World.prototype.resize = function (event) {
         var one = event.height / UI.HEIGHT;
 
-        this.gravity = Math.floor(one * UI.GRAVITY);
+        this.gravity = Math.floor(one * GamePlay.GRAVITY);
 
         var widthHalf = UI.WIDTH / 2 * one;
         var screenWidthHalf = event.width / 2;
 
-        var tile = Math.floor(one * UI.TILE);
+        var tile = Math.floor(one * GamePlay.TILE);
 
         this.cornerX = Math.floor(screenWidthHalf - widthHalf) + tile;
         this.endX = Math.floor(screenWidthHalf + widthHalf) - tile;
@@ -338,4 +338,4 @@ G.World = (function (Math, Object, Vectors, UI) {
     };
 
     return World;
-})(Math, Object, H5.Vectors, G.UI);
+})(Math, Object, H5.Vectors, G.UI, G.GamePlay);

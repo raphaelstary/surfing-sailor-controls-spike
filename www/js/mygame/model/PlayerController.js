@@ -1,4 +1,4 @@
-G.PlayerController = (function (UI, Math) {
+G.PlayerController = (function (UI, GamePlay, Math) {
     "use strict";
 
     function PlayerController(device, player, builder) {
@@ -9,8 +9,8 @@ G.PlayerController = (function (UI, Math) {
 
     PlayerController.prototype.resize = function (event) {
         var one = event.height / UI.HEIGHT;
-        this.forceX = Math.floor(one * UI.FORCE_X);
-        this.forceY = Math.floor(one * UI.FORCE_Y);
+        this.forceX = Math.floor(one * GamePlay.FORCE_X);
+        this.forceY = Math.floor(one * GamePlay.FORCE_Y);
     };
 
     PlayerController.prototype.jumpLeft = function () {
@@ -48,4 +48,4 @@ G.PlayerController = (function (UI, Math) {
     };
 
     return PlayerController;
-})(G.UI, Math);
+})(G.UI, G.GamePlay, Math);
