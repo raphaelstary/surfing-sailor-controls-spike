@@ -14,6 +14,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
 
     //noinspection JSUnusedGlobalSymbols
     Game.prototype.leftDown = function () {
+        this.controller.jumpLeft();
     };
 
     //noinspection JSUnusedGlobalSymbols
@@ -22,6 +23,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
 
     //noinspection JSUnusedGlobalSymbols
     Game.prototype.rightDown = function () {
+        this.controller.jumpRight();
     };
 
     //noinspection JSUnusedGlobalSymbols
@@ -81,6 +83,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
         wrapper.builder.createRandomBall();
 
         this.world = wrapper.world;
+        this.controller = wrapper.controller;
     };
 
     Game.prototype.preDestroy = function () {
