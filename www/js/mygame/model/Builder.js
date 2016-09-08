@@ -13,6 +13,8 @@ G.Builder = (function (Vectors, range, UI, Math, Width, Height, wrap) {
 
     Builder.prototype.resize = function (event) {
         this.magnitude = Math.floor(event.height / UI.HEIGHT * UI.MAGNITUDE);
+        this.currentHeight = event.height;
+        this.tileHeight = Math.floor(event.height / UI.HEIGHT * UI.TILE);
     };
 
     Builder.prototype.__createWall = function (xFn, yFn, widthFn, heightFn, filled) {
@@ -73,6 +75,12 @@ G.Builder = (function (Vectors, range, UI, Math, Width, Height, wrap) {
         drawable.forceY = 0;
 
         return drawable;
+    };
+
+    Builder.prototype.reset = function (player) {
+        player.y = this.currentHeight - 4 * this.tileHeight;
+        player.lastX = player.x;
+        player.lastY = player.y;
     };
 
     Builder.prototype.createStartBall = function () {

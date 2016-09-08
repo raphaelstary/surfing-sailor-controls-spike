@@ -40,7 +40,7 @@ G.PlayerController = (function (UI, Math) {
     };
 
     PlayerController.prototype.down = function () {
-        // todo
+        this.builder.reset(this.player);
     };
 
     PlayerController.prototype.spawnBall = function () {
