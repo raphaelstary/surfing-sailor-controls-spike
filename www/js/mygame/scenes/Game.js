@@ -3,9 +3,8 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
 
     /** @property counter */
     function Game(services) {
-        this.stage = services.stage;
         this.events = services.events;
-        this.device = services.device;
+        this.services = services;
     }
 
     //noinspection JSUnusedGlobalSymbols
@@ -62,7 +61,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
             self.nextScene(score);
         }
 
-        var wrapper = createWorld(this.stage, this.device, count, gameOver);
+        var wrapper = createWorld(this.services, count, gameOver);
 
         this.keyBoardControls = installPlayerKeyBoard(this.events, wrapper.controller);
         this.gamePadControls = installPlayerGamePad(this.events, wrapper.controller);

@@ -1,14 +1,15 @@
 G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) {
     "use strict";
 
-    function Builder(stage, device, scenery, balls, obstacles) {
-        this.stage = stage;
+    function Builder(services, scenery, balls, obstacles) {
+        this.stage = services.stage;
+        this.timer = services.timer;
 
         this.scenery = scenery;
         this.balls = balls;
         this.obstacles = obstacles;
 
-        this.resize(device);
+        this.resize(services.device);
     }
 
     Builder.prototype.resize = function (event) {
@@ -77,8 +78,45 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
         return drawable;
     };
 
+    Builder.prototype.__createFrameOfPlayer = function (player, y, lineWidth, alpha) {
+        var dep = [player];
+        return this.stage.createRectangle(false)
+            .setColor(UI.WHITE)
+            .setPosition(wrap(player, 'x'), wrap(y), dep)
+            .setWidth(player.getWidth.bind(player), dep)
+            .setHeight(player.getHeight.bind(player), dep)
+            .setLineWidth(function (width, height) {
+                var number = Math.floor(height / UI.HEIGHT * lineWidth);
+                if (lineWidth > number)
+                    return lineWidth;
+                return number;
+            })
+            .setAlpha(alpha);
+    };
+
     Builder.prototype.reset = function (player) {
         player.y = this.currentHeight - 4 * this.tileHeight;
+
+        var diff = player.y - player.lastY;
+        var distance = Math.floor(diff / 4);
+        var yPos1 = player.lastY + distance;
+        var yPos2 = yPos1 + distance;
+        var yPos3 = yPos2 + distance;
+
+        var frame1 = this.__createFrameOfPlayer(player, yPos1, 2, 0.5);
+        var frame2 = this.__createFrameOfPlayer(player, yPos2, 3, 0.6);
+        var frame3 = this.__createFrameOfPlayer(player, yPos3, 4, 0.7);
+
+        this.timer.doLater(function () {
+            frame1.remove();
+        }, 2);
+        this.timer.doLater(function () {
+            frame2.remove();
+        }, 4);
+        this.timer.doLater(function () {
+            frame3.remove();
+        }, 6);
+
         player.lastX = player.x;
         player.lastY = player.y;
     };

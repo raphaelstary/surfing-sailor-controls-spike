@@ -36,7 +36,6 @@ G.Tutorial = (function (Key, Event) {
                 self.nextScene();
             }
         });
-
     };
 
     Tutorial.prototype.preDestroy = function () {
