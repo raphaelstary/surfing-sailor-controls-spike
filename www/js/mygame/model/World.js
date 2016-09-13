@@ -49,8 +49,74 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
         player.lastX = player.x;
         player.lastY = player.y;
 
-        player.x += Math.round(forceX);
-        player.y += Math.round(forceY);
+        forceX = Math.round(forceX);
+        forceY = Math.round(forceY);
+
+        player.lastTotalForceX = forceX;
+        player.lastTotalForceY = forceY;
+
+        this.__setPlayerX(player.x + forceX);
+        this.__setPlayerY(player.y + forceY);
+    };
+
+    World.prototype.__setPlayerX = function (x) {
+        this.player.x = x;
+
+        if (UI.PLAYER_SHADOW)
+            this.player.shadows.forEach(function (shadow, index, array) {
+                shadow.lastX = shadow.x;
+                if (index < 1) {
+                    shadow.x = this.player.lastX;
+                    return;
+                }
+                shadow.x = array[index - 1].lastX;
+            }, this);
+    };
+
+    World.prototype.__setPlayerY = function (y) {
+        this.player.y = y;
+
+        if (UI.PLAYER_SHADOW)
+            this.player.shadows.forEach(function (shadow, index, array) {
+                if (this.player.lastTotalForceY > 0) {
+                    shadow.y = this.player.y;
+                    return;
+                }
+                shadow.lastY = shadow.y;
+                if (index < 1) {
+                    shadow.y = this.player.lastY;
+                    return;
+                }
+                shadow.y = array[index - 1].lastY;
+            }, this);
+    };
+
+    World.prototype.__setBallX = function (ball, value) {
+        ball.x = value;
+
+        if (UI.BALL_SHADOW)
+            ball.shadows.forEach(function (shadow, index, array) {
+                shadow.lastX = shadow.x;
+                if (index < 1) {
+                    shadow.x = ball.lastX;
+                    return;
+                }
+                shadow.x = array[index - 1].lastX;
+            });
+    };
+
+    World.prototype.__setBallY = function (ball, value) {
+        ball.y = value;
+
+        if (UI.BALL_SHADOW)
+            ball.shadows.forEach(function (shadow, index, array) {
+                shadow.lastY = shadow.y;
+                if (index < 1) {
+                    shadow.y = ball.lastY;
+                    return;
+                }
+                shadow.y = array[index - 1].lastY;
+            });
     };
 
     World.prototype.updateBallMovement = function () {
@@ -64,8 +130,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
             ball.lastX = ball.x;
             ball.lastY = ball.y;
 
-            ball.x += Math.round(forceX);
-            ball.y += Math.round(forceY);
+            this.__setBallX(ball, ball.x + Math.round(forceX));
+            this.__setBallY(ball, ball.y + Math.round(forceY));
         }, this);
     };
 
@@ -159,14 +225,14 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                         ball.forceX *= -1;
                         this.paddleHitFn();
                     }
-                    ball.x = player.x - playerWidthHalf - 2 * ballWidthHalf;
+                    this.__setBallX(ball, player.x - playerWidthHalf - 2 * ballWidthHalf);
 
                 } else if (wasBallRightOfPlayer) {
                     if (ball.forceX < 0) {
                         ball.forceX *= -1;
                         this.paddleHitFn();
                     }
-                    ball.x = player.x + playerWidthHalf + 2 * ballWidthHalf;
+                    this.__setBallX(ball, player.x + playerWidthHalf + 2 * ballWidthHalf);
                 }
 
                 var ballLeft = ball.x - ballWidthHalf;
@@ -194,25 +260,25 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                         ballBottom > element.getCornerY() && ballTop < element.getEndY()) {
 
                         if (ball.x - ballWidthHalf < this.cornerX)
-                            ball.x = this.cornerX + ballWidthHalf;
+                            this.__setBallX(ball, this.cornerX + ballWidthHalf);
                         if (ball.x + ballWidthHalf > this.endX)
-                            ball.x = this.endX - ballWidthHalf;
+                            this.__setBallX(ball, this.endX - ballWidthHalf);
                         if (ball.y - ballHeightHalf < this.cornerY)
                             ball.y = this.cornerY + ballHeightHalf;
                         if (ball.y + ballHeightHalf > this.endY)
                             ball.y = this.endY - ballHeightHalf;
 
                         if (wasBallOverPlayer) {
-                            player.y = ball.y + ballHeightHalf + playerHeightHalf + 1;
+                            this.__setPlayerY(ball.y + ballHeightHalf + playerHeightHalf + 1);
 
                         } else if (wasBallUnderPlayer) {
-                            player.y = ball.y - ballHeightHalf - playerHeightHalf - 1;
+                            this.__setPlayerY(ball.y - ballHeightHalf - playerHeightHalf - 1);
 
                         } else if (wasBallLeftOfPlayer) {
-                            player.x = ball.x + ballWidthHalf + playerWidthHalf + 1;
+                            this.__setPlayerX(ball.x + ballWidthHalf + playerWidthHalf + 1);
 
                         } else if (wasBallRightOfPlayer) {
-                            player.x = ball.x - ballWidthHalf - playerWidthHalf - 1;
+                            this.__setPlayerX(ball.x - ballWidthHalf - playerWidthHalf - 1);
                         }
                     }
 
@@ -244,9 +310,9 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                     ball.y + heightHalf > element.getCornerY() && ball.y - heightHalf < element.getEndY()) {
 
                     if (ball.x - widthHalf < this.cornerX)
-                        ball.x = this.cornerX + widthHalf;
+                        this.__setBallX(ball, this.cornerX + widthHalf);
                     if (ball.x + widthHalf > this.endX)
-                        ball.x = this.endX - widthHalf;
+                        this.__setBallX(ball, this.endX - widthHalf);
                     if (ball.y - heightHalf < this.cornerY)
                         ball.y = this.cornerY + heightHalf;
                     if (ball.y + heightHalf > this.endY)
@@ -287,7 +353,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                     // Collision on right side of player
                     p = Vectors.getIntersectionPoint(player.lastX + widthHalf, player.lastY, player.x + widthHalf,
                         player.y, b1_x, b1_y, b4_x, b4_y);
-                    player.x = p.x - widthHalf;
+                    this.__setPlayerX(p.x - widthHalf);
                     player.forceX = 0;
 
                 } else if (player.lastX - widthHalf >= element.x + elemWidthHalf &&
@@ -296,7 +362,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                     // Collision on left side of player
                     p = Vectors.getIntersectionPoint(player.lastX - widthHalf, player.lastY, player.x - widthHalf,
                         player.y, b2_x, b2_y, b3_x, b3_y);
-                    player.x = p.x + widthHalf;
+                    this.__setPlayerX(p.x + widthHalf);
                     player.forceX = 0;
                 } else if (player.lastY + heightHalf <= element.y - elemHeightHalf &&
                     player.y + heightHalf > element.y - elemHeightHalf) {
@@ -304,33 +370,34 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                     // Collision on bottom side of player
                     p = Vectors.getIntersectionPoint(player.lastX, player.lastY + heightHalf, player.x,
                         player.y + heightHalf, b1_x, b1_y, b2_x, b2_y);
-                    player.y = p.y - heightHalf;
+                    this.__setPlayerY(p.y - heightHalf);
                     player.forceY = 0;
                 } else {
                     // Collision on top side of player
                     p = Vectors.getIntersectionPoint(player.lastX, player.lastY - heightHalf, player.x,
                         player.y - heightHalf, b3_x, b3_y, b4_x, b4_y);
-                    player.y = p.y + heightHalf;
+                    this.__setPlayerY(p.y + heightHalf);
                     player.forceY = 0;
                 }
             }
         }, this);
     };
 
+    function remove(entity) {
+        if (entity.shadows)
+            entity.shadows.forEach(remove);
+        entity.remove();
+    }
+
     World.prototype.removeBall = function (ball, index, ballArray) {
-        ball.remove();
+        remove(ball);
         ballArray.splice(index, 1);
 
         // if (this.balls.length <= 0)
-            this.gameOverFn();
+        this.gameOverFn();
     };
 
     World.prototype.preDestroy = function () {
-
-        function remove(entity) {
-            entity.remove();
-        }
-
         this.scenery.forEach(remove);
         this.obstacles.forEach(remove);
         this.balls.forEach(remove);

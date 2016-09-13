@@ -61,21 +61,41 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
         this.obstacles.push(wallBottom);
     };
 
-    Builder.prototype.createPlayer = function () {
+    Builder.prototype.__createPlayer = function (color, alpha, zIndex) {
         var drawable = this.stage.createRectangle(true)
-            .setColor(UI.WHITE)
-            .setPosition(Width.HALF, Height.get(6, 5))
+            .setColor(color)
             .setWidth(function (width, height) {
                 return Math.floor(height / UI.HEIGHT * GamePlay.TILE * 12);
             })
             .setHeight(Height.get(UI.HEIGHT, GamePlay.TILE * 2));
 
-        drawable.lastX = drawable.x;
-        drawable.lastY = drawable.y;
-        drawable.forceX = 0;
-        drawable.forceY = 0;
+        if (alpha)
+            drawable.setAlpha(alpha);
+
+        if (zIndex)
+            drawable.setZIndex(zIndex);
 
         return drawable;
+    };
+
+    Builder.prototype.createPlayer = function () {
+        var player = this.__createPlayer(UI.WHITE).setPosition(Width.HALF, Height.get(6, 5));
+
+        if (UI.PLAYER_SHADOW)
+            player.shadows = [
+                this.__createPlayer('grey', 1, 2),
+                this.__createPlayer('grey', 0.8, 2),
+                this.__createPlayer('grey', 0.6, 2),
+                this.__createPlayer('grey', 0.4, 2),
+                this.__createPlayer('grey', 0.2, 2)
+            ];
+
+        player.lastX = player.x;
+        player.lastY = player.y;
+        player.forceX = 0;
+        player.forceY = 0;
+
+        return player;
     };
 
     Builder.prototype.__createFrameOfPlayer = function (player, y, lineWidth, alpha) {
@@ -173,14 +193,25 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
             return Math.floor(height / UI.HEIGHT * GamePlay.TILE);
         }
 
-        var ball = this.stage.createRectangle(true)
-            .setColor(UI.WHITE)
-            .setWidth(tileWidth)
-            .setHeight(Height.get(UI.HEIGHT, GamePlay.TILE))
+        var ball = this.__createBall(UI.WHITE)
             .setPosition(function (width, height) {
                 var one = height / UI.HEIGHT;
                 return Math.floor(width / 2 - UI.WIDTH / 2 * one + one * point.x);
             }, Height.get(UI.HEIGHT, point.y));
+
+        if (UI.BALL_SHADOW)
+            ball.shadows = [
+                this.__createBall('grey', 1, 2),
+                this.__createBall('grey', 0.9, 2),
+                this.__createBall('grey', 0.8, 2),
+                this.__createBall('grey', 0.7, 2),
+                this.__createBall('grey', 0.6, 2),
+                this.__createBall('grey', 0.5, 2),
+                this.__createBall('grey', 0.4, 2),
+                this.__createBall('grey', 0.3, 2),
+                this.__createBall('grey', 0.2, 2),
+                this.__createBall('grey', 0.1, 2)
+            ];
 
         ball.lastX = ball.x;
         ball.lastY = ball.y;
@@ -189,6 +220,26 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
 
         ball.forceX = direction.x;
         ball.forceY = direction.y;
+    };
+
+    Builder.prototype.__createBall = function (color, alpha, zIndex) {
+        //noinspection JSUnusedLocalSymbols
+        function tileWidth(width, height) {
+            return Math.floor(height / UI.HEIGHT * GamePlay.TILE);
+        }
+
+        var ball = this.stage.createRectangle(true)
+            .setColor(color)
+            .setWidth(tileWidth)
+            .setHeight(Height.get(UI.HEIGHT, GamePlay.TILE));
+
+        if (zIndex !== undefined)
+            ball.setZIndex(zIndex);
+
+        if (alpha !== undefined)
+            ball.setAlpha(alpha);
+
+        return ball;
     };
 
     return Builder;
