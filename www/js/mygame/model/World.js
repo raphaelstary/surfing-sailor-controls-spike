@@ -135,9 +135,14 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, Transition) {
         }, this);
     };
 
-    World.prototype.__hit = function (ball) {
+    World.prototype.__hit = function (ball, wall) {
         ball.setScale(2);
         ball.scaleTo(1).setDuration(10).setSpacing(Transition.EASE_OUT_SIN);
+
+        if (wall) {
+            wall.setScale(2);
+            wall.scaleTo(1).setDuration(30).setSpacing(Transition.EASE_OUT_ELASTIC);
+        }
     };
 
     World.prototype.checkBallPaddleCollision = function () {
@@ -332,7 +337,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, Transition) {
                     } else {
                         ball.forceX *= -1;
                     }
-                    this.__hit(ball);
+                    this.__hit(ball, element);
                 }
             }, this);
 

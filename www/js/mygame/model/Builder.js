@@ -48,14 +48,18 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
         }
 
         var wallLeft = this.__createWall(leftX, Height.HALF, getWidth_tile, Height.FULL, true);
+        wallLeft.justWidthScale = true;
 
         var wallRight = this.__createWall(rightX, Height.HALF, getWidth_tile, Height.FULL, true);
+        wallRight.justWidthScale = true;
 
         var wallTop = this.__createWall(Width.HALF, Height.get(UI.HEIGHT, GamePlay.TILE / 2), getWidth_full,
             Height.get(UI.HEIGHT, GamePlay.TILE), true);
+        wallTop.justHeightScale = true;
 
         var wallBottom = this.__createWall(Width.HALF, Height.get(UI.HEIGHT, UI.HEIGHT - GamePlay.TILE / 2),
             getWidth_full, Height.get(UI.HEIGHT, GamePlay.TILE));
+        wallBottom.justHeightScale = true;
 
         this.scenery.push(wallTop, wallLeft, wallRight);
         this.obstacles.push(wallBottom);
@@ -229,7 +233,6 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
         }
 
         var ball = this.stage.createRectangle(true)
-            .setScale(1)
             .setColor(color)
             .setWidth(tileWidth)
             .setHeight(Height.get(UI.HEIGHT, GamePlay.TILE));
