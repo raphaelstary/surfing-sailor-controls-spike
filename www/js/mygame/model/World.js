@@ -1,4 +1,4 @@
-G.World = (function (Math, Object, Vectors, UI, GamePlay) {
+G.World = (function (Math, Object, Vectors, UI, GamePlay, Transition) {
     "use strict";
 
     function World(device, player, scenery, balls, obstacles, paddleHitFn, gameOverFn) {
@@ -135,6 +135,11 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
         }, this);
     };
 
+    World.prototype.__hit = function (ball) {
+        ball.setScale(2);
+        ball.scaleTo(1).setDuration(10).setSpacing(Transition.EASE_OUT_SIN);
+    };
+
     World.prototype.checkBallPaddleCollision = function () {
         this.balls.forEach(function (ball) {
             var ballWidthHalf = ball.getWidthHalf();
@@ -210,6 +215,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                     if (ball.forceY > 0) {
                         ball.forceY *= -1;
                         this.paddleHitFn();
+                        this.__hit(ball);
                     }
                     ball.y = player.y - playerHeightHalf - 2 * ballHeightHalf;
 
@@ -217,6 +223,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                     if (ball.forceY < 0) {
                         ball.forceY *= -1;
                         this.paddleHitFn();
+                        this.__hit(ball);
                     }
                     ball.y = player.y + playerHeightHalf + 2 * ballHeightHalf;
 
@@ -224,6 +231,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                     if (ball.forceX > 0) {
                         ball.forceX *= -1;
                         this.paddleHitFn();
+                        this.__hit(ball);
                     }
                     this.__setBallX(ball, player.x - playerWidthHalf - 2 * ballWidthHalf);
 
@@ -231,6 +239,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                     if (ball.forceX < 0) {
                         ball.forceX *= -1;
                         this.paddleHitFn();
+                        this.__hit(ball);
                     }
                     this.__setBallX(ball, player.x + playerWidthHalf + 2 * ballWidthHalf);
                 }
@@ -323,6 +332,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                     } else {
                         ball.forceX *= -1;
                     }
+                    this.__hit(ball);
                 }
             }, this);
 
@@ -405,4 +415,4 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
     };
 
     return World;
-})(Math, Object, H5.Vectors, G.UI, G.GamePlay);
+})(Math, Object, H5.Vectors, G.UI, G.GamePlay, H5.Transition);

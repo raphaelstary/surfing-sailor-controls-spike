@@ -229,6 +229,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
         }
 
         var ball = this.stage.createRectangle(true)
+            .setScale(1)
             .setColor(color)
             .setWidth(tileWidth)
             .setHeight(Height.get(UI.HEIGHT, GamePlay.TILE));
