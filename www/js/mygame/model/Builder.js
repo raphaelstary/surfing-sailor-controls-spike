@@ -122,24 +122,20 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
         player.y = this.currentHeight - 4 * this.tileHeight;
 
         var diff = player.y - player.lastY;
-        var distance = Math.floor(diff / 4);
-        var yPos1 = player.lastY + distance;
-        var yPos2 = yPos1 + distance;
-        var yPos3 = yPos2 + distance;
 
-        var frame1 = this.__createFrameOfPlayer(player, yPos1, 2, 0.5);
-        var frame2 = this.__createFrameOfPlayer(player, yPos2, 3, 0.6);
-        var frame3 = this.__createFrameOfPlayer(player, yPos3, 4, 0.7);
+        var framesCount = Math.floor(diff / (UI.HEIGHT / 20));
+        var frames = [];
+        var distance = Math.floor(diff / (framesCount + 1));
+        for (var i = 1; i <= framesCount; i++) {
+            var yPos = player.y - distance * i;
+            frames.push(this.__createFrameOfPlayer(player, yPos, 2, 1 - i * 0.1));
+        }
 
-        this.timer.doLater(function () {
-            frame1.remove();
-        }, 2);
-        this.timer.doLater(function () {
-            frame2.remove();
-        }, 4);
-        this.timer.doLater(function () {
-            frame3.remove();
-        }, 6);
+        frames.reverse().forEach(function (frame, index) {
+            this.timer.doLater(function () {
+                frame.remove();
+            }, index * 2);
+        }, this);
 
         player.lastX = player.x;
         player.lastY = player.y;
