@@ -156,8 +156,12 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
 
     World.prototype.__hit = function (ball, wall) {
         this.view.hitBall(ball);
-        if (wall)
+        if (wall) {
             this.view.hitWall(wall);
+            this.shaker.startVerySmallShake();
+        } else {
+            this.shaker.startSmallShake();
+        }
     };
 
     World.prototype.checkBallPaddleCollision = function () {
