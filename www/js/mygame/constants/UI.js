@@ -7,5 +7,7 @@ G.UI = {
 
     BALL_SHADOW: true,
     PLAYER_SHADOW: true,
-    BALL_ROTATION: true
+    BALL_ROTATION: true,
+    SCENE_APPEARANCE: true,
+    SCREEN_SHAKE: true
 };

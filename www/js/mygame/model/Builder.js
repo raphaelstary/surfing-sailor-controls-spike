@@ -308,6 +308,10 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
     Builder.prototype.animateSceneAppearance = function (player) {
         var promise = new Promise();
+        if (!UI.SCENE_APPEARANCE) {
+            promise.resolve();
+            return promise;
+        }
 
         var spacing = Transition.EASE_OUT_BACK;
         var dropInSpeed = 30;
