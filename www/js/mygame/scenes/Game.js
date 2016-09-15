@@ -80,9 +80,6 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
         this.shaker = this.events.subscribe(Event.TICK_MOVE, wrapper.shaker.update.bind(wrapper.shaker));
         this.camera = this.events.subscribe(Event.TICK_CAMERA, wrapper.world.updateCamera.bind(wrapper.world));
 
-        wrapper.builder.createDefaultWalls();
-        wrapper.builder.createRandomBall();
-
         this.world = wrapper.world;
         this.controller = wrapper.controller;
     };

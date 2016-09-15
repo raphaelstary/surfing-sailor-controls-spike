@@ -7,7 +7,17 @@ G.createWorld = (function (Builder, PlayerController, World, Camera, createViewP
         var balls = [];
         var obstacles = [];
         var builder = new Builder(services, scenery, balls, obstacles);
-        var player = builder.createPlayer();
+
+        function initLevel() {
+            var player = builder.createPlayer();
+            builder.createDefaultWalls();
+            builder.createRandomBall();
+
+            return player;
+        }
+
+        var player = initLevel();
+
         var playerController = new PlayerController(services.device, player, builder);
         var shaker = new ScreenShaker(services.device);
         var viewPort = createViewPort(services.stage);

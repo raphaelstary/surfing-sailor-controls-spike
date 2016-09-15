@@ -6,5 +6,6 @@ G.UI = {
     HEIGHT: 1334,
 
     BALL_SHADOW: true,
-    PLAYER_SHADOW: true
+    PLAYER_SHADOW: true,
+    BALL_ROTATION: true
 };

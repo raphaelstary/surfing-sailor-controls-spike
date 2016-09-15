@@ -191,7 +191,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         }, {
             x: Vectors.getX(0, this.magnitude, angle),
             y: Vectors.getY(0, this.magnitude, angle)
-        });
+        }, angle);
     };
 
     Builder.prototype.create2ndBall = function () {
@@ -203,7 +203,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         }, {
             x: Vectors.getX(0, this.magnitude, angle),
             y: Vectors.getY(0, this.magnitude, angle)
-        });
+        }, angle);
     };
 
     Builder.prototype.createRandomBall = function () {
@@ -224,10 +224,10 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         }, {
             x: Vectors.getX(0, this.magnitude, angle),
             y: Vectors.getY(0, this.magnitude, angle)
-        });
+        }, angle);
     };
 
-    Builder.prototype.createBall = function (point, direction) {
+    Builder.prototype.createBall = function (point, direction, angle) {
 
         //noinspection JSUnusedLocalSymbols
         function tileWidth(width, height) {
@@ -239,6 +239,9 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
                 var one = height / UI.HEIGHT;
                 return Math.floor(width / 2 - UI.WIDTH / 2 * one + one * point.x);
             }, Height.get(UI.HEIGHT, point.y));
+
+        if (UI.BALL_ROTATION && angle !== undefined)
+            ball.drawable.setRotation(angle);
 
         if (UI.BALL_SHADOW)
             ball.shadows = [
@@ -293,6 +296,8 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     Builder.prototype.hitBall = function (ball) {
         ball.drawable.setScale(2);
         ball.drawable.scaleTo(1).setDuration(10).setSpacing(Transition.EASE_OUT_SIN);
+        if (UI.BALL_ROTATION)
+            ball.drawable.setRotation(Vectors.getAngle(ball.forceX, ball.forceY));
     };
 
     Builder.prototype.hitWall = function (wall) {
