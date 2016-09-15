@@ -1,17 +1,36 @@
-G.World = (function (Math, Object, Vectors, UI, GamePlay, Transition) {
+G.World = (function (Math, Object, Vectors, UI, GamePlay) {
     "use strict";
 
-    function World(device, player, scenery, balls, obstacles, paddleHitFn, gameOverFn) {
+    function World(device, camera, shaker, view, player, scenery, balls, obstacles, paddleHitFn, gameOverFn) {
         this.scenery = scenery;
         this.player = player;
         this.balls = balls;
         this.obstacles = obstacles;
+
+        this.camera = camera;
+        this.shaker = shaker;
+        this.view = view;
 
         this.paddleHitFn = paddleHitFn;
         this.gameOverFn = gameOverFn;
 
         this.resize(device);
     }
+
+    World.prototype.__updatePosition = function (entity) {
+        this.camera.calcScreenPosition(entity, entity.drawable);
+        if (entity.shadows)
+            entity.shadows.forEach(this.__updatePosition, this);
+        if (entity.frames)
+            entity.frames.forEach(this.__updatePosition, this);
+    };
+
+    World.prototype.updateCamera = function () {
+        this.scenery.forEach(this.__updatePosition, this);
+        this.__updatePosition(this.player);
+        this.balls.forEach(this.__updatePosition, this);
+        this.obstacles.forEach(this.__updatePosition, this);
+    };
 
     var airResistance = 0.9;
 
@@ -136,13 +155,9 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, Transition) {
     };
 
     World.prototype.__hit = function (ball, wall) {
-        ball.setScale(2);
-        ball.scaleTo(1).setDuration(10).setSpacing(Transition.EASE_OUT_SIN);
-
-        if (wall) {
-            wall.setScale(2);
-            wall.scaleTo(1).setDuration(30).setSpacing(Transition.EASE_OUT_ELASTIC);
-        }
+        this.view.hitBall(ball);
+        if (wall)
+            this.view.hitWall(wall);
     };
 
     World.prototype.checkBallPaddleCollision = function () {
@@ -401,7 +416,10 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, Transition) {
     function remove(entity) {
         if (entity.shadows)
             entity.shadows.forEach(remove);
+        if (entity.frames)
+            entity.frames.forEach(remove);
         entity.remove();
+        entity.drawable.remove();
     }
 
     World.prototype.removeBall = function (ball, index, ballArray) {
@@ -420,4 +438,4 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, Transition) {
     };
 
     return World;
-})(Math, Object, H5.Vectors, G.UI, G.GamePlay, H5.Transition);
+})(Math, Object, H5.Vectors, G.UI, G.GamePlay);

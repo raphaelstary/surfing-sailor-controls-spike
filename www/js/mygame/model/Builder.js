@@ -1,4 +1,4 @@
-G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) {
+G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, Transition) {
     "use strict";
 
     function Builder(services, scenery, balls, obstacles) {
@@ -19,8 +19,12 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
     };
 
     Builder.prototype.__createWall = function (xFn, yFn, widthFn, heightFn, filled) {
-        return this.stage.createRectangle(filled).setColor(UI.WHITE).setPosition(xFn, yFn).setWidth(widthFn)
+        var wall = this.stage.createRectangle(filled).setColor(UI.WHITE).setPosition(xFn, yFn).setWidth(widthFn)
             .setHeight(heightFn).setLineWidth(wrap(2));
+        wall.show = false;
+        wall.drawable = this.stage.createRectangle(filled).setColor(UI.WHITE).setPosition(xFn, yFn).setWidth(widthFn)
+            .setHeight(heightFn).setLineWidth(wrap(2));
+        return wall;
     };
 
     Builder.prototype.createDefaultWalls = function () {
@@ -48,18 +52,18 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
         }
 
         var wallLeft = this.__createWall(leftX, Height.HALF, getWidth_tile, Height.FULL, true);
-        wallLeft.justWidthScale = true;
+        wallLeft.drawable.justWidthScale = true;
 
         var wallRight = this.__createWall(rightX, Height.HALF, getWidth_tile, Height.FULL, true);
-        wallRight.justWidthScale = true;
+        wallRight.drawable.justWidthScale = true;
 
         var wallTop = this.__createWall(Width.HALF, Height.get(UI.HEIGHT, GamePlay.TILE / 2), getWidth_full,
             Height.get(UI.HEIGHT, GamePlay.TILE), true);
-        wallTop.justHeightScale = true;
+        wallTop.drawable.justHeightScale = true;
 
         var wallBottom = this.__createWall(Width.HALF, Height.get(UI.HEIGHT, UI.HEIGHT - GamePlay.TILE / 2),
             getWidth_full, Height.get(UI.HEIGHT, GamePlay.TILE));
-        wallBottom.justHeightScale = true;
+        wallBottom.drawable.justHeightScale = true;
 
         this.scenery.push(wallTop, wallLeft, wallRight);
         this.obstacles.push(wallBottom);
@@ -82,16 +86,30 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
         return drawable;
     };
 
-    Builder.prototype.createPlayer = function () {
+    Builder.prototype.__createPlayerEntity = function () {
         var player = this.__createPlayer(UI.WHITE).setPosition(Width.HALF, Height.get(6, 5));
+        player.show = false;
+        player.drawable = this.__createPlayer(UI.WHITE).setPosition(Width.HALF, Height.get(6, 5));
+        return player;
+    };
+
+    Builder.prototype.__createShadow = function (color, alpha, zIndex) {
+        var shadow = this.__createPlayer(color, alpha, zIndex);
+        shadow.show = false;
+        shadow.drawable = this.__createPlayer(color, alpha, zIndex);
+        return shadow;
+    };
+
+    Builder.prototype.createPlayer = function () {
+        var player = this.__createPlayerEntity();
 
         if (UI.PLAYER_SHADOW)
             player.shadows = [
-                this.__createPlayer('grey', 1, 2),
-                this.__createPlayer('grey', 0.8, 2),
-                this.__createPlayer('grey', 0.6, 2),
-                this.__createPlayer('grey', 0.4, 2),
-                this.__createPlayer('grey', 0.2, 2)
+                this.__createShadow('grey', 1, 2),
+                this.__createShadow('grey', 0.8, 2),
+                this.__createShadow('grey', 0.6, 2),
+                this.__createShadow('grey', 0.4, 2),
+                this.__createShadow('grey', 0.2, 2)
             ];
 
         player.lastX = player.x;
@@ -104,7 +122,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
 
     Builder.prototype.__createFrameOfPlayer = function (player, y, lineWidth, alpha) {
         var dep = [player];
-        return this.stage.createRectangle(false)
+        var frame = this.stage.createRectangle(false)
             .setColor(UI.WHITE)
             .setPosition(wrap(player, 'x'), wrap(y), dep)
             .setWidth(player.getWidth.bind(player), dep)
@@ -116,6 +134,22 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
                 return number;
             })
             .setAlpha(alpha);
+
+        frame.show = false;
+        frame.drawable = this.stage.createRectangle(false)
+            .setColor(UI.WHITE)
+            .setPosition(wrap(player, 'x'), wrap(y), dep)
+            .setWidth(player.getWidth.bind(player), dep)
+            .setHeight(player.getHeight.bind(player), dep)
+            .setLineWidth(function (width, height) {
+                var number = Math.floor(height / UI.HEIGHT * lineWidth);
+                if (lineWidth > number)
+                    return lineWidth;
+                return number;
+            })
+            .setAlpha(alpha);
+
+        return frame;
     };
 
     Builder.prototype.reset = function (player) {
@@ -134,8 +168,15 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
         frames.reverse().forEach(function (frame, index) {
             this.timer.doLater(function () {
                 frame.remove();
-            }, index * 2);
+                frame.drawable.remove();
+            }, index * 2 + 1);
         }, this);
+
+        this.timer.doLater(function () {
+            delete player.frames;
+        }, frames.length * 2 + 1);
+
+        player.frames = frames;
 
         player.lastX = player.x;
         player.lastY = player.y;
@@ -223,6 +264,13 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
     };
 
     Builder.prototype.__createBall = function (color, alpha, zIndex) {
+        var ball = this.__createBallDrawable(color, alpha, zIndex);
+        ball.show = false;
+        ball.drawable = this.__createBallDrawable(color, alpha, zIndex);
+        return ball;
+    };
+
+    Builder.prototype.__createBallDrawable = function (color, alpha, zIndex) {
         //noinspection JSUnusedLocalSymbols
         function tileWidth(width, height) {
             return Math.floor(height / UI.HEIGHT * GamePlay.TILE);
@@ -242,5 +290,15 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap) 
         return ball;
     };
 
+    Builder.prototype.hitBall = function (ball) {
+        ball.drawable.setScale(2);
+        ball.drawable.scaleTo(1).setDuration(10).setSpacing(Transition.EASE_OUT_SIN);
+    };
+
+    Builder.prototype.hitWall = function (wall) {
+        wall.drawable.setScale(2);
+        wall.drawable.scaleTo(1).setDuration(30).setSpacing(Transition.EASE_OUT_ELASTIC);
+    };
+
     return Builder;
-})(H5.Vectors, H5.range, G.UI, G.GamePlay, Math, H5.Width, H5.Height, H5.wrap);
+})(H5.Vectors, H5.range, G.UI, G.GamePlay, Math, H5.Width, H5.Height, H5.wrap, H5.Transition);
