@@ -63,25 +63,28 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
 
         var wrapper = createWorld(this.services, count, gameOver);
 
-        this.keyBoardControls = installPlayerKeyBoard(this.events, wrapper.controller);
-        this.gamePadControls = installPlayerGamePad(this.events, wrapper.controller);
-
-        this.playerMovement = this.events.subscribe(Event.TICK_MOVE,
-            wrapper.world.updatePlayerMovement.bind(wrapper.world));
-        this.ballMovement = this.events.subscribe(Event.TICK_MOVE,
-            wrapper.world.updateBallMovement.bind(wrapper.world));
-        this.playerBallCollision = this.events.subscribe(Event.TICK_POST_COLLISION,
-            wrapper.world.checkBallPaddleCollision.bind(wrapper.world));
-        this.wallCollision = this.events.subscribe(Event.TICK_COLLISION,
-            wrapper.world.checkCollisions.bind(wrapper.world));
-        this.paddleForce = this.events.subscribe(Event.RESIZE, wrapper.controller.resize.bind(wrapper.controller));
-        this.ballForce = this.events.subscribe(Event.RESIZE, wrapper.builder.resize.bind(wrapper.builder));
-        this.gravityForce = this.events.subscribe(Event.RESIZE, wrapper.world.resize.bind(wrapper.world));
-        this.shaker = this.events.subscribe(Event.TICK_MOVE, wrapper.shaker.update.bind(wrapper.shaker));
         this.camera = this.events.subscribe(Event.TICK_CAMERA, wrapper.world.updateCamera.bind(wrapper.world));
 
-        this.world = wrapper.world;
-        this.controller = wrapper.controller;
+        wrapper.builder.animateSceneAppearance(wrapper.player).then(function () {
+            this.keyBoardControls = installPlayerKeyBoard(this.events, wrapper.controller);
+            this.gamePadControls = installPlayerGamePad(this.events, wrapper.controller);
+
+            this.playerMovement = this.events.subscribe(Event.TICK_MOVE,
+                wrapper.world.updatePlayerMovement.bind(wrapper.world));
+            this.ballMovement = this.events.subscribe(Event.TICK_MOVE,
+                wrapper.world.updateBallMovement.bind(wrapper.world));
+            this.playerBallCollision = this.events.subscribe(Event.TICK_POST_COLLISION,
+                wrapper.world.checkBallPaddleCollision.bind(wrapper.world));
+            this.wallCollision = this.events.subscribe(Event.TICK_COLLISION,
+                wrapper.world.checkCollisions.bind(wrapper.world));
+            this.paddleForce = this.events.subscribe(Event.RESIZE, wrapper.controller.resize.bind(wrapper.controller));
+            this.ballForce = this.events.subscribe(Event.RESIZE, wrapper.builder.resize.bind(wrapper.builder));
+            this.gravityForce = this.events.subscribe(Event.RESIZE, wrapper.world.resize.bind(wrapper.world));
+            this.shaker = this.events.subscribe(Event.TICK_MOVE, wrapper.shaker.update.bind(wrapper.shaker));
+
+            this.world = wrapper.world;
+            this.controller = wrapper.controller;
+        }, this);
     };
 
     Game.prototype.preDestroy = function () {

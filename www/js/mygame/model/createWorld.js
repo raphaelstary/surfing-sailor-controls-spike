@@ -28,7 +28,8 @@ G.createWorld = (function (Builder, PlayerController, World, Camera, createViewP
             builder: builder,
             controller: playerController,
             camera: camera,
-            shaker: shaker
+            shaker: shaker,
+            player: player
         };
     }
 

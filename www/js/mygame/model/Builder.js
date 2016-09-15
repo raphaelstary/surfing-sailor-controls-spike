@@ -1,4 +1,5 @@
-G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, Transition) {
+G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, Transition, Promise, CallbackCounter,
+    changeSign) {
     "use strict";
 
     function Builder(services, scenery, balls, obstacles) {
@@ -305,5 +306,53 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         wall.drawable.scaleTo(1).setDuration(30).setSpacing(Transition.EASE_OUT_ELASTIC);
     };
 
+    Builder.prototype.animateSceneAppearance = function (player) {
+        var promise = new Promise();
+
+        var spacing = Transition.EASE_OUT_BACK;
+        var dropInSpeed = 30;
+        var yFn = changeSign(Height.HALF);
+
+        var callbackCounter = new CallbackCounter(promise.resolve.bind(promise));
+
+        var self = this;
+
+        function dropIn(pair) {
+            // var later = range(1, 30);
+            pair.drawable.show = false;
+            if (pair.shadows)
+                pair.shadows.forEach(function (shadow) {
+                    shadow.drawable.show = false;
+                });
+            // this.timer.doLater(function () {
+            var callback = callbackCounter.register();
+            pair.moveFrom(wrap(pair, 'x'), yFn)
+                .setDuration(dropInSpeed * 2)
+                .setSpacing(spacing)
+                .setCallback(function () {
+                    if (pair.shadows) {
+                        self.timer.doLater(function () {
+                            pair.shadows.forEach(function (shadow) {
+                                shadow.drawable.show = true;
+                            });
+                        }, 2);
+                    }
+                    callback();
+                });
+            // }, later);
+            this.timer.doLater(function () {
+                pair.drawable.show = true;
+            }, 1);
+        }
+
+        this.scenery.forEach(dropIn, this);
+        this.balls.forEach(dropIn, this);
+        this.obstacles.forEach(dropIn, this);
+        dropIn.call(this, player);
+
+        return promise;
+    };
+
     return Builder;
-})(H5.Vectors, H5.range, G.UI, G.GamePlay, Math, H5.Width, H5.Height, H5.wrap, H5.Transition);
+})(H5.Vectors, H5.range, G.UI, G.GamePlay, Math, H5.Width, H5.Height, H5.wrap, H5.Transition, H5.Promise,
+    H5.CallbackCounter, H5.changeSign);
