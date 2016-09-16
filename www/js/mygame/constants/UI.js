@@ -14,6 +14,8 @@ G.UI = {
     MOUTH_COLOR: '#f4f4f4',
     SCREEN_HIGHLIGHT_COLOR: '#f4f4f4',
     SCREEN_COLOR: '#000',
+    SCORE_HIGHLIGHT_COLOR: '#000',
+    SCORE_COLOR: '#f4f4f4',
 
     WIDTH: 750,
     HEIGHT: 1334

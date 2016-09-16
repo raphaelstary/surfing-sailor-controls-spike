@@ -11,5 +11,6 @@ G.AppFlag = {
     SCREEN_SHAKE: true,
     PARTICLES: true,
     PLAYER_FACE: true,
-    HIGHLIGHT_BACKGROUND: true
+    HIGHLIGHT_BACKGROUND: true,
+    HIGHLIGHT_SCORE: true
 };

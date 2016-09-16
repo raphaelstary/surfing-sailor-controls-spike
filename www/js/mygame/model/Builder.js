@@ -2,7 +2,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     Event, subtract, AppFlag, multiply) {
     "use strict";
 
-    function Builder(services, scenery, balls, obstacles, camera) {
+    function Builder(services, scenery, balls, obstacles, camera, counter) {
         this.stage = services.stage;
         this.timer = services.timer;
         this.events = services.events;
@@ -14,6 +14,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         this.obstacles = obstacles;
 
         this.camera = camera;
+        this.counter = counter;
 
         this.resize(services.device);
     }
@@ -492,6 +493,26 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
             if (--this.highlightingCount > 0) {
                 //noinspection JSPotentiallyInvalidUsageOfThis
                 this.timer.doLater(this.__highlightScreen, 2, this);
+            }
+        }, 2, this);
+    };
+
+    Builder.prototype.highlightScore = function () {
+        if (!AppFlag.HIGHLIGHT_SCORE)
+            return;
+
+        this.highlightingScoreCount = 3;
+        this.__highlightScore();
+    };
+
+    Builder.prototype.__highlightScore = function () {
+        this.counter.setColor(UI.SCORE_HIGHLIGHT_COLOR);
+        this.timer.doLater(function () {
+            //noinspection JSPotentiallyInvalidUsageOfThis
+            this.counter.setColor(UI.SCORE_COLOR);
+            if (--this.highlightingScoreCount > 0) {
+                //noinspection JSPotentiallyInvalidUsageOfThis
+                this.timer.doLater(this.__highlightScore, 2, this);
             }
         }, 2, this);
     };

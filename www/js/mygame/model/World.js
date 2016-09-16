@@ -223,6 +223,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
                 this.shaker.startSmallShake();
             }
             this.view.highlightScreen();
+            this.view.highlightScore();
         }
     };
 
