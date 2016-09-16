@@ -158,7 +158,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     };
 
     Builder.prototype.reset = function (player) {
-        player.y = this.currentHeight - 4 * this.tileHeight;
+        player.y = this.currentHeight - 2 * this.tileHeight - 1;
 
         var diff = player.y - player.lastY;
 
