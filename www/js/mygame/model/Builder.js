@@ -1,14 +1,18 @@
 G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, Transition, Promise, CallbackCounter,
-    changeSign) {
+    changeSign, Event) {
     "use strict";
 
-    function Builder(services, scenery, balls, obstacles) {
+    function Builder(services, scenery, balls, obstacles, camera) {
         this.stage = services.stage;
         this.timer = services.timer;
+        this.events = services.events;
+        this.device = services.device;
 
         this.scenery = scenery;
         this.balls = balls;
         this.obstacles = obstacles;
+
+        this.camera = camera;
 
         this.resize(services.device);
     }
@@ -181,6 +185,74 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
         player.lastX = player.x;
         player.lastY = player.y;
+    };
+
+    Builder.prototype.animateImpactOnTop = function (x, y) {
+        this.__animateImpact(x, y, 180, 360);
+    };
+
+    Builder.prototype.animateImpactOnLeft = function (x, y) {
+        this.__animateImpact(x, y, 90, 270);
+    };
+
+    Builder.prototype.animateImpactOnRight = function (x, y) {
+        this.__animateImpact(x, y, 270, 450);
+    };
+
+    Builder.prototype.animateImpactOnBottom = function (x, y) {
+        this.__animateImpact(x, y, 0, 180);
+    };
+
+    Builder.prototype.__animateImpact = function (x, y, startAngle, endAngle) {
+        var magnitudeA = Math.floor(this.device.height / UI.HEIGHT * 2.5);
+        var magnitudeB = Math.floor(this.device.height / UI.HEIGHT * 5);
+
+        function animateParticle() {
+            var particle = this.__createParticle(x, y, magnitudeA, magnitudeB, startAngle, endAngle, 0.1, 0.5);
+            var moveId = this.events.subscribe(Event.TICK_MOVE, function () {
+                particle.x += Math.round(particle.forceX);
+                particle.y += Math.round(particle.forceY);
+            });
+            var cameraId = this.events.subscribe(Event.TICK_CAMERA, function () {
+                this.camera.calcScreenPosition(particle, particle.drawable);
+            }, this);
+            particle.drawable.opacityTo(0.2)
+                .setDuration(15)
+                .setSpacing(Transition.LINEAR)
+                .setCallback(function () {
+                    this.events.unsubscribe(moveId);
+                    this.events.unsubscribe(cameraId);
+                    particle.drawable.remove();
+                    particle.remove();
+                }, this);
+        }
+
+        for (var i = 0; i < 10; i++) {
+            var later = range(0, 5);
+            if (later < 1) {
+                animateParticle.call(this);
+            } else {
+                this.timer.doLater(animateParticle, later, this);
+            }
+        }
+    };
+
+    Builder.prototype.__createParticle = function (x, y, startMagnitude, endMagnitude, startAngle, endAngle, startSize,
+        endSize) {
+
+        var angle = Vectors.toRadians(range(startAngle, endAngle));
+        var magnitude = range(startMagnitude, endMagnitude);
+        var zoom = range(startSize * 10, endSize * 10) / 10;
+
+        var particle = this.__createBall(UI.WHITE, 1, 0)
+            .setPosition(wrap(x), wrap(y));
+
+        particle.forceX = Vectors.getX(0, magnitude, angle);
+        particle.forceY = Vectors.getY(0, magnitude, angle);
+
+        particle.drawable.setScale(zoom);
+
+        return particle;
     };
 
     Builder.prototype.createStartBall = function () {
@@ -359,4 +431,4 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
     return Builder;
 })(H5.Vectors, H5.range, G.UI, G.GamePlay, Math, H5.Width, H5.Height, H5.wrap, H5.Transition, H5.Promise,
-    H5.CallbackCounter, H5.changeSign);
+    H5.CallbackCounter, H5.changeSign, H5.Event);

@@ -240,6 +240,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                         ball.forceY *= -1;
                         this.paddleHitFn();
                         this.__hit(ball);
+                        this.view.animateImpactOnTop(ball.x, ball.y);
                     }
                     ball.y = player.y - playerHeightHalf - 2 * ballHeightHalf;
 
@@ -248,6 +249,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                         ball.forceY *= -1;
                         this.paddleHitFn();
                         this.__hit(ball);
+                        this.view.animateImpactOnBottom(ball.x, ball.y);
                     }
                     ball.y = player.y + playerHeightHalf + 2 * ballHeightHalf;
 
@@ -256,6 +258,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                         ball.forceX *= -1;
                         this.paddleHitFn();
                         this.__hit(ball);
+                        this.view.animateImpactOnLeft(ball.x, ball.y);
                     }
                     this.__setBallX(ball, player.x - playerWidthHalf - 2 * ballWidthHalf);
 
@@ -264,6 +267,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
                         ball.forceX *= -1;
                         this.paddleHitFn();
                         this.__hit(ball);
+                        this.view.animateImpactOnRight(ball.x, ball.y);
                     }
                     this.__setBallX(ball, player.x + playerWidthHalf + 2 * ballWidthHalf);
                 }
@@ -353,8 +357,18 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
 
                     if (element.getWidth() > element.getHeight()) {
                         ball.forceY *= -1;
+                        if (ball.y < element.y) {
+                            this.view.animateImpactOnTop(ball.x, ball.y);
+                        } else {
+                            this.view.animateImpactOnBottom(ball.x, ball.y);
+                        }
                     } else {
                         ball.forceX *= -1;
+                        if (ball.x < element.x) {
+                            this.view.animateImpactOnLeft(ball.x, ball.y);
+                        } else {
+                            this.view.animateImpactOnRight(ball.x, ball.y);
+                        }
                     }
                     this.__hit(ball, element);
                 }
