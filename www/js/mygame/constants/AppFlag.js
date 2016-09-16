@@ -8,5 +8,6 @@ G.AppFlag = {
     BALL_ROTATION: true,
     SCENE_APPEARANCE: true,
     SCREEN_SHAKE: true,
-    PARTICLES: true
+    PARTICLES: true,
+    PLAYER_FACE: true
 };
