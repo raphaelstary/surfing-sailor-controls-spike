@@ -255,9 +255,12 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         var framesCount = Math.floor(diff / (UI.HEIGHT / 20));
         var frames = [];
         var distance = Math.floor(diff / (framesCount + 1));
+        var alphaDiff = 1 / framesCount;
         for (var i = 1; i <= framesCount; i++) {
             var yPos = player.y - distance * i;
-            frames.push(this.__createFrameOfPlayer(player, yPos, 2, 1 - i * 0.1));
+            var alpha = 1 - i * alphaDiff;
+            if (alpha >= 0.1)
+                frames.push(this.__createFrameOfPlayer(player, yPos, 2, alpha));
         }
 
         frames.reverse().forEach(function (frame, index) {
