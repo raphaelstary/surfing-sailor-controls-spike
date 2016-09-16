@@ -204,6 +204,9 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     };
 
     Builder.prototype.__animateImpact = function (x, y, startAngle, endAngle) {
+        if (!UI.PARTICLES)
+            return;
+
         var magnitudeA = Math.floor(this.device.height / UI.HEIGHT * 2.5);
         var magnitudeB = Math.floor(this.device.height / UI.HEIGHT * 5);
 
@@ -367,13 +370,17 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     };
 
     Builder.prototype.hitBall = function (ball) {
-        ball.drawable.setScale(2);
-        ball.drawable.scaleTo(1).setDuration(10).setSpacing(Transition.EASE_OUT_SIN);
+        if (UI.BALL_SCALE) {
+            ball.drawable.setScale(2);
+            ball.drawable.scaleTo(1).setDuration(10).setSpacing(Transition.EASE_OUT_SIN);
+        }
         if (UI.BALL_ROTATION)
             ball.drawable.setRotation(Vectors.getAngle(ball.forceX, ball.forceY));
     };
 
     Builder.prototype.hitWall = function (wall) {
+        if (!UI.WALL_SCALE)
+            return;
         wall.drawable.setScale(2);
         wall.drawable.scaleTo(1).setDuration(30).setSpacing(Transition.EASE_OUT_ELASTIC);
     };

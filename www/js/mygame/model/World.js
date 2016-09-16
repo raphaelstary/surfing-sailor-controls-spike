@@ -158,9 +158,11 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
         this.view.hitBall(ball);
         if (wall) {
             this.view.hitWall(wall);
-            this.shaker.startVerySmallShake();
+            if (UI.SCREEN_SHAKE)
+                this.shaker.startVerySmallShake();
         } else {
-            this.shaker.startSmallShake();
+            if (UI.SCREEN_SHAKE)
+                this.shaker.startSmallShake();
         }
     };
 
