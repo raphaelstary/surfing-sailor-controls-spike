@@ -1,5 +1,5 @@
 G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, Transition, Promise, CallbackCounter,
-    changeSign, Event) {
+    Event, subtract) {
     "use strict";
 
     function Builder(services, scenery, balls, obstacles, camera) {
@@ -394,7 +394,6 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
         var spacing = Transition.EASE_OUT_BACK;
         var dropInSpeed = 30;
-        var yFn = changeSign(Height.HALF);
 
         var callbackCounter = new CallbackCounter(promise.resolve.bind(promise));
 
@@ -409,7 +408,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
                 });
             // this.timer.doLater(function () {
             var callback = callbackCounter.register();
-            pair.moveFrom(wrap(pair, 'x'), yFn)
+            pair.moveFrom(wrap(pair, 'x'), subtract(wrap(pair, 'y'), Height.FULL))
                 .setDuration(dropInSpeed * 2)
                 .setSpacing(spacing)
                 .setCallback(function () {
@@ -438,4 +437,4 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
     return Builder;
 })(H5.Vectors, H5.range, G.UI, G.GamePlay, Math, H5.Width, H5.Height, H5.wrap, H5.Transition, H5.Promise,
-    H5.CallbackCounter, H5.changeSign, H5.Event);
+    H5.CallbackCounter, H5.Event, H5.subtract);
