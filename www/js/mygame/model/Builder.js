@@ -24,10 +24,11 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     };
 
     Builder.prototype.__createWall = function (xFn, yFn, widthFn, heightFn, filled) {
-        var wall = this.stage.createRectangle(filled).setColor(UI.WHITE).setPosition(xFn, yFn).setWidth(widthFn)
+        var wall = this.stage.createRectangle(filled).setPosition(xFn, yFn).setWidth(widthFn)
             .setHeight(heightFn).setLineWidth(wrap(2));
         wall.show = false;
-        wall.drawable = this.stage.createRectangle(filled).setColor(UI.WHITE).setPosition(xFn, yFn).setWidth(widthFn)
+        wall.drawable = this.stage.createRectangle(filled).setColor(UI.WALL_COLOR).setPosition(xFn, yFn)
+            .setWidth(widthFn)
             .setHeight(heightFn).setLineWidth(wrap(2));
         return wall;
     };
@@ -92,9 +93,9 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     };
 
     Builder.prototype.__createPlayerEntity = function () {
-        var player = this.__createPlayer(UI.WHITE).setPosition(Width.HALF, Height.get(6, 5));
+        var player = this.__createPlayer(UI.PLAYER_COLOR).setPosition(Width.HALF, Height.get(6, 5));
         player.show = false;
-        player.drawable = this.__createPlayer(UI.WHITE).setPosition(Width.HALF, Height.get(6, 5));
+        player.drawable = this.__createPlayer(UI.PLAYER_COLOR).setPosition(Width.HALF, Height.get(6, 5));
         return player;
     };
 
@@ -105,16 +106,24 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         return shadow;
     };
 
+    Builder.prototype.__createFace = function (player) {
+
+    };
+
     Builder.prototype.createPlayer = function () {
         var player = this.__createPlayerEntity();
 
+        if (AppFlag.PLAYER_FACE) {
+            this.__createFace(player);
+        }
+
         if (AppFlag.PLAYER_SHADOW)
             player.shadows = [
-                this.__createShadow('grey', 1, 2),
-                this.__createShadow('grey', 0.8, 2),
-                this.__createShadow('grey', 0.6, 2),
-                this.__createShadow('grey', 0.4, 2),
-                this.__createShadow('grey', 0.2, 2)
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 1, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.6, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.4, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.2, 2)
             ];
 
         player.lastX = player.x;
@@ -128,7 +137,6 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     Builder.prototype.__createFrameOfPlayer = function (player, y, lineWidth, alpha) {
         var dep = [player];
         var frame = this.stage.createRectangle(false)
-            .setColor(UI.WHITE)
             .setPosition(wrap(player, 'x'), wrap(y), dep)
             .setWidth(player.getWidth.bind(player), dep)
             .setHeight(player.getHeight.bind(player), dep)
@@ -137,12 +145,11 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
                 if (lineWidth > number)
                     return lineWidth;
                 return number;
-            })
-            .setAlpha(alpha);
+            });
 
         frame.show = false;
         frame.drawable = this.stage.createRectangle(false)
-            .setColor(UI.WHITE)
+            .setColor(UI.PLAYER_FRAME_COLOR)
             .setPosition(wrap(player, 'x'), wrap(y), dep)
             .setWidth(player.getWidth.bind(player), dep)
             .setHeight(player.getHeight.bind(player), dep)
@@ -247,7 +254,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         var magnitude = range(startMagnitude, endMagnitude);
         var zoom = range(startSize * 10, endSize * 10) / 10;
 
-        var particle = this.__createBall(UI.WHITE, 1, 0)
+        var particle = this.__createBall(UI.PARTICLE_COLOR, 1, 0)
             .setPosition(wrap(x), wrap(y));
 
         particle.forceX = Vectors.getX(0, magnitude, angle);
@@ -310,7 +317,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
             return Math.floor(height / UI.HEIGHT * GamePlay.TILE);
         }
 
-        var ball = this.__createBall(UI.WHITE)
+        var ball = this.__createBall(UI.BALL_COLOR)
             .setPosition(function (width, height) {
                 var one = height / UI.HEIGHT;
                 return Math.floor(width / 2 - UI.WIDTH / 2 * one + one * point.x);
@@ -321,16 +328,16 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
         if (AppFlag.BALL_SHADOW)
             ball.shadows = [
-                this.__createBall('grey', 1, 2),
-                this.__createBall('grey', 0.9, 2),
-                this.__createBall('grey', 0.8, 2),
-                this.__createBall('grey', 0.7, 2),
-                this.__createBall('grey', 0.6, 2),
-                this.__createBall('grey', 0.5, 2),
-                this.__createBall('grey', 0.4, 2),
-                this.__createBall('grey', 0.3, 2),
-                this.__createBall('grey', 0.2, 2),
-                this.__createBall('grey', 0.1, 2)
+                this.__createBall(UI.BALL_SHADOW_COLOR, 1, 2),
+                this.__createBall(UI.BALL_SHADOW_COLOR, 0.9, 2),
+                this.__createBall(UI.BALL_SHADOW_COLOR, 0.8, 2),
+                this.__createBall(UI.BALL_SHADOW_COLOR, 0.7, 2),
+                this.__createBall(UI.BALL_SHADOW_COLOR, 0.6, 2),
+                this.__createBall(UI.BALL_SHADOW_COLOR, 0.5, 2),
+                this.__createBall(UI.BALL_SHADOW_COLOR, 0.4, 2),
+                this.__createBall(UI.BALL_SHADOW_COLOR, 0.3, 2),
+                this.__createBall(UI.BALL_SHADOW_COLOR, 0.2, 2),
+                this.__createBall(UI.BALL_SHADOW_COLOR, 0.1, 2)
             ];
 
         ball.lastX = ball.x;
