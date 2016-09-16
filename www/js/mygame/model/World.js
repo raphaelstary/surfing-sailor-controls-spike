@@ -23,6 +23,12 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             entity.shadows.forEach(this.__updatePosition, this);
         if (entity.frames)
             entity.frames.forEach(this.__updatePosition, this);
+        if (entity.hasFace && AppFlag.PLAYER_FACE) {
+            this.__updatePosition(this.player.leftEye);
+            this.__updatePosition(this.player.rightEye);
+            this.__updatePosition(this.player.leftPupil);
+            this.__updatePosition(this.player.rightPupil);
+        }
     };
 
     World.prototype.updateCamera = function () {
@@ -81,6 +87,13 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     World.prototype.__setPlayerX = function (x) {
         this.player.x = x;
 
+        if (AppFlag.PLAYER_FACE) {
+            this.player.leftEye.x = this.player.leftEye.xFn(this.view.device.width, this.view.device.height);
+            this.player.rightEye.x = this.player.rightEye.xFn(this.view.device.width, this.view.device.height);
+            this.player.leftPupil.x = this.player.leftPupil.xFn(this.view.device.width, this.view.device.height);
+            this.player.rightPupil.x = this.player.rightPupil.xFn(this.view.device.width, this.view.device.height);
+        }
+
         if (AppFlag.PLAYER_SHADOW)
             this.player.shadows.forEach(function (shadow, index, array) {
                 shadow.lastX = shadow.x;
@@ -94,6 +107,13 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
 
     World.prototype.__setPlayerY = function (y) {
         this.player.y = y;
+
+        if (AppFlag.PLAYER_FACE) {
+            this.player.leftEye.y = this.player.leftEye.yFn(this.view.device.height, this.view.device.width);
+            this.player.rightEye.y = this.player.rightEye.yFn(this.view.device.height, this.view.device.width);
+            this.player.leftPupil.y = this.player.leftPupil.yFn(this.view.device.height, this.view.device.width);
+            this.player.rightPupil.y = this.player.rightPupil.yFn(this.view.device.height, this.view.device.width);
+        }
 
         if (AppFlag.PLAYER_SHADOW)
             this.player.shadows.forEach(function (shadow, index, array) {
@@ -438,6 +458,12 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             entity.shadows.forEach(remove);
         if (entity.frames)
             entity.frames.forEach(remove);
+        if (entity.hasFace) {
+            remove(entity.leftEye);
+            remove(entity.rightEye);
+            remove(entity.rightPupil);
+            remove(entity.leftPupil);
+        }
         entity.remove();
         entity.drawable.remove();
     }
@@ -446,7 +472,6 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         remove(ball);
         ballArray.splice(index, 1);
 
-        // if (this.balls.length <= 0)
         this.gameOverFn();
     };
 

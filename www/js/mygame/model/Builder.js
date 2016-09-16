@@ -108,6 +108,64 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
     Builder.prototype.__createFace = function (player) {
 
+        function leftEyeX(width, height) {
+            return player.x - 3 * tileWidth(width, height);
+        }
+
+        function rightEyeX(width, height) {
+            return player.x + 3 * tileWidth(width, height);
+        }
+
+        var deps = [player];
+
+        player.hasFace = true;
+        var leftEye = player.leftEye = this.__createBall(UI.EYE_COLOR, 1, 4)
+            .setPosition(leftEyeX, wrap(player, 'y'), deps);
+        leftEye.xFn = leftEyeX;
+        leftEye.yFn = wrap(player, 'y');
+
+        var leftPupil = player.leftPupil = this.__createBall(UI.PUPIL_COLOR, 1, 5)
+            .setPosition(leftEyeX, wrap(player, 'y'), deps);
+        leftPupil.drawable.setScale(0.5);
+        leftPupil.xFn = leftEyeX;
+        leftPupil.yFn = wrap(player, 'y');
+
+        var rightEye = player.rightEye = this.__createBall(UI.EYE_COLOR, 1, 4)
+            .setPosition(rightEyeX, wrap(player, 'y'), deps);
+        rightEye.xFn = rightEyeX;
+        rightEye.yFn = wrap(player, 'y');
+
+        var rightPupil = player.rightPupil = this.__createBall(UI.PUPIL_COLOR, 1, 5)
+            .setPosition(rightEyeX, wrap(player, 'y'), deps);
+        rightPupil.drawable.setScale(0.5);
+        rightPupil.xFn = rightEyeX;
+        rightPupil.yFn = wrap(player, 'y');
+
+        function openEyes() {
+            leftEye.drawable.show = true;
+            rightEye.drawable.show = true;
+            leftPupil.drawable.show = true;
+            rightPupil.drawable.show = true;
+        }
+
+        function closeEyes() {
+            leftEye.drawable.show = false;
+            rightEye.drawable.show = false;
+            leftPupil.drawable.show = false;
+            rightPupil.drawable.show = false;
+        }
+
+        var self = this;
+
+        function startEyeAnimation() {
+            openEyes();
+            self.timer.doLater(function () {
+                closeEyes();
+                self.timer.doLater(startEyeAnimation, 6);
+            }, 120);
+        }
+
+        startEyeAnimation();
     };
 
     Builder.prototype.createPlayer = function () {
@@ -311,12 +369,6 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     };
 
     Builder.prototype.createBall = function (point, direction, angle) {
-
-        //noinspection JSUnusedLocalSymbols
-        function tileWidth(width, height) {
-            return Math.floor(height / UI.HEIGHT * GamePlay.TILE);
-        }
-
         var ball = this.__createBall(UI.BALL_COLOR)
             .setPosition(function (width, height) {
                 var one = height / UI.HEIGHT;
@@ -356,11 +408,12 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         return ball;
     };
 
+    //noinspection JSUnusedLocalSymbols
+    function tileWidth(width, height) {
+        return Math.floor(height / UI.HEIGHT * GamePlay.TILE);
+    }
+
     Builder.prototype.__createBallDrawable = function (color, alpha, zIndex) {
-        //noinspection JSUnusedLocalSymbols
-        function tileWidth(width, height) {
-            return Math.floor(height / UI.HEIGHT * GamePlay.TILE);
-        }
 
         var ball = this.stage.createRectangle(true)
             .setColor(color)
@@ -438,6 +491,13 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         this.balls.forEach(dropIn, this);
         this.obstacles.forEach(dropIn, this);
         dropIn.call(this, player);
+
+        if (AppFlag.PLAYER_FACE) {
+            dropIn.call(this, player.leftEye);
+            dropIn.call(this, player.rightEye);
+            dropIn.call(this, player.leftPupil);
+            dropIn.call(this, player.rightPupil);
+        }
 
         return promise;
     };
