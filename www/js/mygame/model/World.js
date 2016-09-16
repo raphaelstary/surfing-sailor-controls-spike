@@ -28,6 +28,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             this.__updatePosition(this.player.rightEye);
             this.__updatePosition(this.player.leftPupil);
             this.__updatePosition(this.player.rightPupil);
+            this.__updatePosition(this.player.mouth);
         }
     };
 
@@ -46,6 +47,14 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
                 distanceVector = vector;
             }
         }, this);
+
+        if (distanceOfNearest > this.view.device.height * this.view.device.height / 3) {
+            this.player.mouth.drawable.justWidthScale = true;
+            this.player.mouth.drawable.setScale(0.25);
+        } else {
+            this.player.mouth.drawable.justWidthScale = false;
+            this.player.mouth.drawable.setScale(1);
+        }
 
         //noinspection JSUnusedAssignment
         var angle = Vectors.getAngle(distanceVector.x, distanceVector.y);
@@ -119,6 +128,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             this.player.rightEye.x = this.player.rightEye.xFn(this.view.device.width, this.view.device.height);
             this.player.leftPupil.x = this.player.leftPupil.xFn(this.view.device.width, this.view.device.height);
             this.player.rightPupil.x = this.player.rightPupil.xFn(this.view.device.width, this.view.device.height);
+            this.player.mouth.x = this.player.mouth.xFn(this.view.device.width, this.view.device.height);
         }
 
         if (AppFlag.PLAYER_SHADOW)
@@ -140,6 +150,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             this.player.rightEye.y = this.player.rightEye.yFn(this.view.device.height, this.view.device.width);
             this.player.leftPupil.y = this.player.leftPupil.yFn(this.view.device.height, this.view.device.width);
             this.player.rightPupil.y = this.player.rightPupil.yFn(this.view.device.height, this.view.device.width);
+            this.player.mouth.y = this.player.mouth.yFn(this.view.device.height, this.view.device.width);
         }
 
         if (AppFlag.PLAYER_SHADOW)
@@ -490,6 +501,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             remove(entity.rightEye);
             remove(entity.rightPupil);
             remove(entity.leftPupil);
+            remove(entity.mouth);
         }
         entity.remove();
         entity.drawable.remove();

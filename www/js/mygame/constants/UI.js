@@ -11,6 +11,7 @@ G.UI = {
     PLAYER_FRAME_COLOR: '#f4f4f4',
     EYE_COLOR: '#f4f4f4',
     PUPIL_COLOR: 'black',
+    MOUTH_COLOR: '#f4f4f4',
 
     WIDTH: 750,
     HEIGHT: 1334

@@ -1,5 +1,5 @@
 G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, Transition, Promise, CallbackCounter,
-    Event, subtract, AppFlag) {
+    Event, subtract, AppFlag, multiply) {
     "use strict";
 
     function Builder(services, scenery, balls, obstacles, camera) {
@@ -107,6 +107,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     };
 
     Builder.prototype.__createFace = function (player) {
+        player.hasFace = true;
 
         function leftEyeX(width, height) {
             return player.x - 3 * tileWidth(width, height);
@@ -116,9 +117,31 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
             return player.x + 3 * tileWidth(width, height);
         }
 
+        function mouthY(height, width) {
+            return player.y + Height.get(UI.HEIGHT, GamePlay.TILE / 2)(height, width);
+        }
+
         var deps = [player];
 
-        player.hasFace = true;
+        var mouth = player.mouth = this.stage.createRectangle(true)
+            .setPosition(wrap(player, 'x'), mouthY, deps)
+            .setWidth(multiply(tileWidth, 2))
+            .setHeight(Height.get(UI.HEIGHT, GamePlay.TILE / 4))
+            .setZIndex(4)
+            .setColor(UI.MOUTH_COLOR);
+        mouth.show = false;
+        mouth.drawable = this.stage.createRectangle(true)
+            .setPosition(wrap(player, 'x'), mouthY, deps)
+            .setWidth(multiply(tileWidth, 2))
+            .setHeight(Height.get(UI.HEIGHT, GamePlay.TILE / 4))
+            .setZIndex(4)
+            .setColor(UI.MOUTH_COLOR);
+        mouth.xFn = wrap(player, 'x');
+        mouth.yFn = mouthY;
+
+        mouth.drawable.justWidthScale = true;
+        mouth.drawable.setScale(0.25);
+
         var leftEye = player.leftEye = this.__createBall(UI.EYE_COLOR, 1, 4)
             .setPosition(leftEyeX, wrap(player, 'y'), deps);
         leftEye.xFn = leftEyeX;
@@ -499,6 +522,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
             dropIn.call(this, player.rightEye);
             dropIn.call(this, player.leftPupil);
             dropIn.call(this, player.rightPupil);
+            dropIn.call(this, player.mouth);
         }
 
         return promise;
@@ -506,4 +530,4 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
     return Builder;
 })(H5.Vectors, H5.range, G.UI, G.GamePlay, Math, H5.Width, H5.Height, H5.wrap, H5.Transition, H5.Promise,
-    H5.CallbackCounter, H5.Event, H5.subtract, G.AppFlag);
+    H5.CallbackCounter, H5.Event, H5.subtract, G.AppFlag, H5.multiply);
