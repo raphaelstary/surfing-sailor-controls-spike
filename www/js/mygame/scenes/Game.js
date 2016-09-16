@@ -4,6 +4,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
     /** @property counter */
     function Game(services) {
         this.events = services.events;
+        this.timer = services.timer;
         this.services = services;
     }
 
@@ -58,7 +59,9 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
                 return;
             isOver = true;
 
-            self.nextScene(score);
+            self.timer.doLater(function () {
+                self.nextScene(score);
+            }, 5);
         }
 
         var wrapper = createWorld(this.services, count, gameOver);

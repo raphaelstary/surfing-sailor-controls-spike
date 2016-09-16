@@ -461,6 +461,14 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         if (AppFlag.BALL_SCALE) {
             ball.drawable.setScale(2);
             ball.drawable.scaleTo(1).setDuration(10).setSpacing(Transition.EASE_OUT_SIN);
+
+            var oldColor = ball.drawable.data.color;
+            if (oldColor != UI.WHITE) {
+                ball.drawable.setColor(UI.WHITE);
+                this.timer.doLater(function () {
+                    ball.drawable.setColor(oldColor);
+                }, 2);
+            }
         }
         if (AppFlag.BALL_ROTATION)
             ball.drawable.setRotation(Vectors.getAngle(ball.forceX, ball.forceY));
