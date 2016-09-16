@@ -31,6 +31,33 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         }
     };
 
+    World.prototype.updateEyes = function () {
+        if (this.balls.length == 0)
+            return;
+
+        var distanceOfNearest = 0;
+        var distanceVector;
+        this.balls.forEach(function (ball, index) {
+            var vector = Vectors.get(this.player.x, this.player.y, ball.x, ball.y);
+            var distance = Vectors.squaredMagnitude(vector.x, vector.y);
+
+            if (index == 0 || distance < distanceOfNearest) {
+                distanceOfNearest = distance;
+                distanceVector = vector;
+            }
+        }, this);
+
+        //noinspection JSUnusedAssignment
+        var angle = Vectors.getAngle(distanceVector.x, distanceVector.y);
+        var magnitude = this.player.leftEye.getWidth() / 8;
+
+        this.player.leftPupil.x = Vectors.getX(this.player.leftEye.x, magnitude, angle);
+        this.player.leftPupil.y = Vectors.getY(this.player.leftEye.y, magnitude, angle);
+
+        this.player.rightPupil.x = Vectors.getX(this.player.rightEye.x, magnitude, angle);
+        this.player.rightPupil.y = Vectors.getY(this.player.rightEye.y, magnitude, angle);
+    };
+
     World.prototype.updateCamera = function () {
         this.scenery.forEach(this.__updatePosition, this);
         this.__updatePosition(this.player);

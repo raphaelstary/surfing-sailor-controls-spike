@@ -126,7 +126,8 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
         var leftPupil = player.leftPupil = this.__createBall(UI.PUPIL_COLOR, 1, 5)
             .setPosition(leftEyeX, wrap(player, 'y'), deps);
-        leftPupil.drawable.setScale(0.5);
+        leftPupil.setScale(0.5);
+        leftPupil.drawable.setScale(0.75);
         leftPupil.xFn = leftEyeX;
         leftPupil.yFn = wrap(player, 'y');
 
@@ -137,7 +138,8 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
         var rightPupil = player.rightPupil = this.__createBall(UI.PUPIL_COLOR, 1, 5)
             .setPosition(rightEyeX, wrap(player, 'y'), deps);
-        rightPupil.drawable.setScale(0.5);
+        rightPupil.setScale(0.5);
+        rightPupil.drawable.setScale(0.75);
         rightPupil.xFn = rightEyeX;
         rightPupil.yFn = wrap(player, 'y');
 

@@ -1,4 +1,4 @@
-G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGamePad, createWorld) {
+G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGamePad, createWorld, AppFlag) {
     "use strict";
 
     /** @property counter */
@@ -64,27 +64,29 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
         var wrapper = createWorld(this.services, count, gameOver);
 
         this.camera = this.events.subscribe(Event.TICK_CAMERA, wrapper.world.updateCamera.bind(wrapper.world));
+        this.world = wrapper.world;
+        this.controller = wrapper.controller;
+        this.builder = wrapper.builder;
+        this.shaker = wrapper.shaker;
 
-        wrapper.builder.animateSceneAppearance(wrapper.player).then(function () {
-            this.keyBoardControls = installPlayerKeyBoard(this.events, wrapper.controller);
-            this.gamePadControls = installPlayerGamePad(this.events, wrapper.controller);
+        wrapper.builder.animateSceneAppearance(wrapper.player).then(this.__registerEventListeners, this);
+    };
 
-            this.playerMovement = this.events.subscribe(Event.TICK_MOVE,
-                wrapper.world.updatePlayerMovement.bind(wrapper.world));
-            this.ballMovement = this.events.subscribe(Event.TICK_MOVE,
-                wrapper.world.updateBallMovement.bind(wrapper.world));
-            this.playerBallCollision = this.events.subscribe(Event.TICK_POST_COLLISION,
-                wrapper.world.checkBallPaddleCollision.bind(wrapper.world));
-            this.wallCollision = this.events.subscribe(Event.TICK_COLLISION,
-                wrapper.world.checkCollisions.bind(wrapper.world));
-            this.paddleForce = this.events.subscribe(Event.RESIZE, wrapper.controller.resize.bind(wrapper.controller));
-            this.ballForce = this.events.subscribe(Event.RESIZE, wrapper.builder.resize.bind(wrapper.builder));
-            this.gravityForce = this.events.subscribe(Event.RESIZE, wrapper.world.resize.bind(wrapper.world));
-            this.shaker = this.events.subscribe(Event.TICK_MOVE, wrapper.shaker.update.bind(wrapper.shaker));
+    Game.prototype.__registerEventListeners = function () {
+        this.keyBoardControls = installPlayerKeyBoard(this.events, this.controller);
+        this.gamePadControls = installPlayerGamePad(this.events, this.controller);
 
-            this.world = wrapper.world;
-            this.controller = wrapper.controller;
-        }, this);
+        this.playerMovement = this.events.subscribe(Event.TICK_MOVE, this.world.updatePlayerMovement.bind(this.world));
+        this.ballMovement = this.events.subscribe(Event.TICK_MOVE, this.world.updateBallMovement.bind(this.world));
+        if (AppFlag.PLAYER_FACE)
+            this.eyeMovement = this.events.subscribe(Event.TICK_POST_COLLISION, this.world.updateEyes.bind(this.world));
+        this.playerBallCollision = this.events.subscribe(Event.TICK_POST_COLLISION,
+            this.world.checkBallPaddleCollision.bind(this.world));
+        this.wallCollision = this.events.subscribe(Event.TICK_COLLISION, this.world.checkCollisions.bind(this.world));
+        this.paddleForce = this.events.subscribe(Event.RESIZE, this.controller.resize.bind(this.controller));
+        this.ballForce = this.events.subscribe(Event.RESIZE, this.builder.resize.bind(this.builder));
+        this.gravityForce = this.events.subscribe(Event.RESIZE, this.world.resize.bind(this.world));
+        this.shaker = this.events.subscribe(Event.TICK_MOVE, this.shaker.update.bind(this.shaker));
     };
 
     Game.prototype.preDestroy = function () {
@@ -92,6 +94,8 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
         this.events.unsubscribe(this.gamePadControls);
         this.events.unsubscribe(this.playerMovement);
         this.events.unsubscribe(this.ballMovement);
+        if (AppFlag.PLAYER_FACE)
+            this.events.unsubscribe(this.eyeMovement);
         this.events.unsubscribe(this.playerBallCollision);
         this.events.unsubscribe(this.wallCollision);
         this.events.unsubscribe(this.paddleForce);
@@ -103,4 +107,4 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
     };
 
     return Game;
-})(H5.Width, H5.Height, H5.Event, G.installPlayerKeyBoard, G.installPlayerGamePad, G.createWorld);
+})(H5.Width, H5.Height, H5.Event, G.installPlayerKeyBoard, G.installPlayerGamePad, G.createWorld, G.AppFlag);
