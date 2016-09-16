@@ -7,6 +7,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         this.timer = services.timer;
         this.events = services.events;
         this.device = services.device;
+        this.screen = services.screen;
 
         this.scenery = scenery;
         this.balls = balls;
@@ -461,10 +462,11 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         if (AppFlag.BALL_SCALE) {
             ball.drawable.setScale(2);
             ball.drawable.scaleTo(1).setDuration(10).setSpacing(Transition.EASE_OUT_SIN);
-
+        }
+        if (AppFlag.BALL_HIGHLIGHT) {
             var oldColor = ball.drawable.data.color;
-            if (oldColor != UI.WHITE) {
-                ball.drawable.setColor(UI.WHITE);
+            if (oldColor != UI.BALL_HIGHLIGHT_COLOR) {
+                ball.drawable.setColor(UI.BALL_HIGHLIGHT_COLOR);
                 this.timer.doLater(function () {
                     ball.drawable.setColor(oldColor);
                 }, 2);
@@ -472,6 +474,26 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         }
         if (AppFlag.BALL_ROTATION)
             ball.drawable.setRotation(Vectors.getAngle(ball.forceX, ball.forceY));
+    };
+
+    Builder.prototype.highlightScreen = function () {
+        if (!AppFlag.HIGHLIGHT_BACKGROUND)
+            return;
+
+        this.highlightingCount = 3;
+        this.__highlightScreen();
+    };
+
+    Builder.prototype.__highlightScreen = function () {
+        this.screen.style.backgroundColor = UI.SCREEN_HIGHLIGHT_COLOR;
+        this.timer.doLater(function () {
+            //noinspection JSPotentiallyInvalidUsageOfThis
+            this.screen.style.backgroundColor = UI.SCREEN_COLOR;
+            if (--this.highlightingCount > 0) {
+                //noinspection JSPotentiallyInvalidUsageOfThis
+                this.timer.doLater(this.__highlightScreen, 2, this);
+            }
+        }, 2, this);
     };
 
     Builder.prototype.hitWall = function (wall) {

@@ -219,8 +219,10 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             if (AppFlag.SCREEN_SHAKE)
                 this.shaker.startVerySmallShake();
         } else {
-            if (AppFlag.SCREEN_SHAKE)
+            if (AppFlag.SCREEN_SHAKE) {
                 this.shaker.startSmallShake();
+            }
+            this.view.highlightScreen();
         }
     };
 
