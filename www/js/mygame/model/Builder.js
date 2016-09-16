@@ -1,5 +1,5 @@
 G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, Transition, Promise, CallbackCounter,
-    Event, subtract) {
+    Event, subtract, AppFlag) {
     "use strict";
 
     function Builder(services, scenery, balls, obstacles, camera) {
@@ -108,7 +108,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     Builder.prototype.createPlayer = function () {
         var player = this.__createPlayerEntity();
 
-        if (UI.PLAYER_SHADOW)
+        if (AppFlag.PLAYER_SHADOW)
             player.shadows = [
                 this.__createShadow('grey', 1, 2),
                 this.__createShadow('grey', 0.8, 2),
@@ -204,7 +204,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     };
 
     Builder.prototype.__animateImpact = function (x, y, startAngle, endAngle) {
-        if (!UI.PARTICLES)
+        if (!AppFlag.PARTICLES)
             return;
 
         var magnitudeA = Math.floor(this.device.height / UI.HEIGHT * 2.5);
@@ -316,10 +316,10 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
                 return Math.floor(width / 2 - UI.WIDTH / 2 * one + one * point.x);
             }, Height.get(UI.HEIGHT, point.y));
 
-        if (UI.BALL_ROTATION && angle !== undefined)
+        if (AppFlag.BALL_ROTATION && angle !== undefined)
             ball.drawable.setRotation(angle);
 
-        if (UI.BALL_SHADOW)
+        if (AppFlag.BALL_SHADOW)
             ball.shadows = [
                 this.__createBall('grey', 1, 2),
                 this.__createBall('grey', 0.9, 2),
@@ -370,16 +370,16 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     };
 
     Builder.prototype.hitBall = function (ball) {
-        if (UI.BALL_SCALE) {
+        if (AppFlag.BALL_SCALE) {
             ball.drawable.setScale(2);
             ball.drawable.scaleTo(1).setDuration(10).setSpacing(Transition.EASE_OUT_SIN);
         }
-        if (UI.BALL_ROTATION)
+        if (AppFlag.BALL_ROTATION)
             ball.drawable.setRotation(Vectors.getAngle(ball.forceX, ball.forceY));
     };
 
     Builder.prototype.hitWall = function (wall) {
-        if (!UI.WALL_SCALE)
+        if (!AppFlag.WALL_SCALE)
             return;
         wall.drawable.setScale(2);
         wall.drawable.scaleTo(1).setDuration(30).setSpacing(Transition.EASE_OUT_ELASTIC);
@@ -387,7 +387,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
     Builder.prototype.animateSceneAppearance = function (player) {
         var promise = new Promise();
-        if (!UI.SCENE_APPEARANCE) {
+        if (!AppFlag.SCENE_APPEARANCE) {
             promise.resolve();
             return promise;
         }
@@ -437,4 +437,4 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
     return Builder;
 })(H5.Vectors, H5.range, G.UI, G.GamePlay, Math, H5.Width, H5.Height, H5.wrap, H5.Transition, H5.Promise,
-    H5.CallbackCounter, H5.Event, H5.subtract);
+    H5.CallbackCounter, H5.Event, H5.subtract, G.AppFlag);

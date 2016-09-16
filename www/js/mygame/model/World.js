@@ -1,4 +1,4 @@
-G.World = (function (Math, Object, Vectors, UI, GamePlay) {
+G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     "use strict";
 
     function World(device, camera, shaker, view, player, scenery, balls, obstacles, paddleHitFn, gameOverFn) {
@@ -81,7 +81,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
     World.prototype.__setPlayerX = function (x) {
         this.player.x = x;
 
-        if (UI.PLAYER_SHADOW)
+        if (AppFlag.PLAYER_SHADOW)
             this.player.shadows.forEach(function (shadow, index, array) {
                 shadow.lastX = shadow.x;
                 if (index < 1) {
@@ -95,7 +95,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
     World.prototype.__setPlayerY = function (y) {
         this.player.y = y;
 
-        if (UI.PLAYER_SHADOW)
+        if (AppFlag.PLAYER_SHADOW)
             this.player.shadows.forEach(function (shadow, index, array) {
                 if (this.player.lastTotalForceY > 0) {
                     shadow.y = this.player.y;
@@ -113,7 +113,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
     World.prototype.__setBallX = function (ball, value) {
         ball.x = value;
 
-        if (UI.BALL_SHADOW)
+        if (AppFlag.BALL_SHADOW)
             ball.shadows.forEach(function (shadow, index, array) {
                 shadow.lastX = shadow.x;
                 if (index < 1) {
@@ -127,7 +127,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
     World.prototype.__setBallY = function (ball, value) {
         ball.y = value;
 
-        if (UI.BALL_SHADOW)
+        if (AppFlag.BALL_SHADOW)
             ball.shadows.forEach(function (shadow, index, array) {
                 shadow.lastY = shadow.y;
                 if (index < 1) {
@@ -158,10 +158,10 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
         this.view.hitBall(ball);
         if (wall) {
             this.view.hitWall(wall);
-            if (UI.SCREEN_SHAKE)
+            if (AppFlag.SCREEN_SHAKE)
                 this.shaker.startVerySmallShake();
         } else {
-            if (UI.SCREEN_SHAKE)
+            if (AppFlag.SCREEN_SHAKE)
                 this.shaker.startSmallShake();
         }
     };
@@ -458,4 +458,4 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay) {
     };
 
     return World;
-})(Math, Object, H5.Vectors, G.UI, G.GamePlay);
+})(Math, Object, H5.Vectors, G.UI, G.GamePlay, G.AppFlag);
