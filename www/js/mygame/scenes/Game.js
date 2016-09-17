@@ -79,6 +79,8 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
     };
 
     Game.prototype.__startMusic = function () {
+        if (!AppFlag.MUSIC)
+            return;
         var self = this;
         self.stopMusic = false;
         self.lastLoop = 0;
@@ -95,6 +97,8 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
     };
 
     Game.prototype.__stopMusic = function () {
+        if (!AppFlag.MUSIC)
+            return;
         this.stopMusic = true;
         if (this.lastLoop !== 0)
             this.sounds.fadeOut(this.lastLoop);

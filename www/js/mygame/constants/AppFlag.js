@@ -15,5 +15,5 @@ G.AppFlag = {
     HIGHLIGHT_SCORE: false,
     TEST_GAME: false,
     SFX: true,
-    MUSIC: true
+    MUSIC: false
 };
