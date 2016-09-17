@@ -12,5 +12,6 @@ G.AppFlag = {
     PARTICLES: true,
     PLAYER_FACE: true,
     HIGHLIGHT_BACKGROUND: true,
-    HIGHLIGHT_SCORE: true
+    HIGHLIGHT_SCORE: false,
+    TEST_GAME: true
 };

@@ -1,9 +1,11 @@
 G.installMyScenes = (function (Scenes, Start, Tutorial, Game, Score, MVVMScene, Scene, Event, Stats, AppFlag, Width,
-    Height, Font) {
+    Height, Font, UI) {
     "use strict";
 
     function installMyScenes(services) {
         // create your scenes and add them to the scene manager
+
+        services.screen.style.backgroundColor = UI.SCREEN_COLOR;
 
         var scenes = new Scenes();
 
@@ -64,4 +66,4 @@ G.installMyScenes = (function (Scenes, Start, Tutorial, Game, Score, MVVMScene, 
 
     return installMyScenes;
 })(H5.Scenes, G.Start, G.Tutorial, G.Game, G.Score, H5.MVVMScene, G.Scene, H5.Event, H5.Stats, G.AppFlag, H5.Width,
-    H5.Height, H5.Font);
+    H5.Height, H5.Font, G.UI);

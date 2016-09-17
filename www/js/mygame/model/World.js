@@ -514,7 +514,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         remove(ball);
         ballArray.splice(index, 1);
 
-        this.gameOverFn();
+        if (!AppFlag.TEST_GAME)
+            this.gameOverFn();
     };
 
     World.prototype.preDestroy = function () {
