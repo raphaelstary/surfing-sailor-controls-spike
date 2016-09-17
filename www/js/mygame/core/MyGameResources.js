@@ -1,11 +1,13 @@
-G.MyGameResources = (function (File, UI, URL, addFontToDOM) {
+G.MyGameResources = (function (File, UI, URL, addFontToDOM, SoundSpriteManager) {
     "use strict";
 
-    var font, scenes;
+    var font, scenes, audioInfo;
 
     function registerFiles(resourceLoader) {
         font = resourceLoader.addFont(File.FONT);
         scenes = resourceLoader.addJSON(File.SCENES);
+        audioInfo = resourceLoader.addJSON(File.AUDIO_INFO);
+
         return resourceLoader.getCount();
     }
 
@@ -18,8 +20,13 @@ G.MyGameResources = (function (File, UI, URL, addFontToDOM) {
                 }
             ]);
         }
+
+        var sounds = new SoundSpriteManager();
+        sounds.load(audioInfo);
+
         return {
-            scenes: scenes
+            scenes: scenes,
+            sounds: sounds
         };
     }
 
@@ -27,4 +34,4 @@ G.MyGameResources = (function (File, UI, URL, addFontToDOM) {
         create: registerFiles,
         process: processFiles
     };
-})(G.File, G.UI, window.URL || window.webkitURL, H5.addFontToDOM);
+})(G.File, G.UI, window.URL || window.webkitURL, H5.addFontToDOM, H5.SoundSpriteManager);

@@ -216,6 +216,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         this.view.hitBall(ball);
         if (wall) {
             this.view.hitWall(wall);
+            this.view.playWallHit();
             if (AppFlag.SCREEN_SHAKE)
                 this.shaker.startVerySmallShake();
         } else {
@@ -224,6 +225,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             }
             this.view.highlightScreen();
             this.view.highlightScore();
+            this.view.playPaddleHit();
         }
     };
 

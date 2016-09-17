@@ -13,5 +13,7 @@ G.AppFlag = {
     PLAYER_FACE: true,
     HIGHLIGHT_BACKGROUND: true,
     HIGHLIGHT_SCORE: false,
-    TEST_GAME: false
+    TEST_GAME: false,
+    SFX: true,
+    MUSIC: true
 };

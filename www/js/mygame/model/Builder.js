@@ -1,5 +1,5 @@
 G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, Transition, Promise, CallbackCounter,
-    Event, subtract, AppFlag, multiply) {
+    Event, subtract, AppFlag, multiply, Sound) {
     "use strict";
 
     function Builder(services, scenery, balls, obstacles, camera, counter) {
@@ -8,6 +8,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         this.events = services.events;
         this.device = services.device;
         this.screen = services.screen;
+        this.sounds = services.sounds;
 
         this.scenery = scenery;
         this.balls = balls;
@@ -17,6 +18,22 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         this.counter = counter;
 
         this.resize(services.device);
+
+        this.paddleHitSounds = [
+            Sound.PADDLE_HIT_01, Sound.PADDLE_HIT_02, Sound.PADDLE_HIT_03, Sound.PADDLE_HIT_04
+        ];
+        this.wallHitSounds = [
+            Sound.WALL_HIT_01,
+            Sound.WALL_HIT_02,
+            Sound.WALL_HIT_03,
+            Sound.WALL_HIT_04,
+            Sound.WALL_HIT_05,
+            Sound.WALL_HIT_06,
+            Sound.WALL_HIT_07,
+            Sound.WALL_HIT_08,
+            Sound.WALL_HIT_09,
+            Sound.WALL_HIT_10
+        ];
     }
 
     Builder.prototype.resize = function (event) {
@@ -477,6 +494,22 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
             ball.drawable.setRotation(Vectors.getAngle(ball.forceX, ball.forceY));
     };
 
+    Builder.prototype.playWallHit = function () {
+        if (!AppFlag.SFX)
+            return;
+
+        var sound = this.wallHitSounds[range(0, this.wallHitSounds.length - 1)];
+        this.sounds.play(sound);
+    };
+
+    Builder.prototype.playPaddleHit = function () {
+        if (!AppFlag.SFX)
+            return;
+
+        var sound = this.paddleHitSounds[range(0, this.paddleHitSounds.length - 1)];
+        this.sounds.play(sound);
+    };
+
     Builder.prototype.highlightScreen = function () {
         if (!AppFlag.HIGHLIGHT_BACKGROUND)
             return;
@@ -584,4 +617,4 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
     return Builder;
 })(H5.Vectors, H5.range, G.UI, G.GamePlay, Math, H5.Width, H5.Height, H5.wrap, H5.Transition, H5.Promise,
-    H5.CallbackCounter, H5.Event, H5.subtract, G.AppFlag, H5.multiply);
+    H5.CallbackCounter, H5.Event, H5.subtract, G.AppFlag, H5.multiply, G.Sound);
