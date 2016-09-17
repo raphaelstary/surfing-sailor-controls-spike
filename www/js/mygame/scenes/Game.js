@@ -1,10 +1,11 @@
-G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGamePad, createWorld, AppFlag) {
+G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGamePad, createWorld, AppFlag, Sound) {
     "use strict";
 
     /** @property counter */
     function Game(services) {
         this.events = services.events;
         this.timer = services.timer;
+        this.sounds = services.sounds;
         this.services = services;
     }
 
@@ -73,6 +74,30 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
         this.shaker = wrapper.shaker;
 
         wrapper.builder.animateSceneAppearance(wrapper.player).then(this.__registerEventListeners, this);
+
+        this.__startMusic();
+    };
+
+    Game.prototype.__startMusic = function () {
+        var self = this;
+        self.stopMusic = false;
+        self.lastLoop = 0;
+
+        function loopMusic(sound) {
+            if (self.stopMusic)
+                return;
+
+            var loop = self.lastLoop = self.sounds.play(sound);
+            self.sounds.notifyOnce(loop, 'end', loopMusic.bind(undefined, sound));
+        }
+
+        loopMusic(Sound.SABUMY);
+    };
+
+    Game.prototype.__stopMusic = function () {
+        this.stopMusic = true;
+        if (this.lastLoop !== 0)
+            this.sounds.fadeOut(this.lastLoop);
     };
 
     Game.prototype.__registerEventListeners = function () {
@@ -107,7 +132,9 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
         this.events.unsubscribe(this.camera);
         this.events.unsubscribe(this.shaker);
         this.world.preDestroy();
+
+        this.__stopMusic();
     };
 
     return Game;
-})(H5.Width, H5.Height, H5.Event, G.installPlayerKeyBoard, G.installPlayerGamePad, G.createWorld, G.AppFlag);
+})(H5.Width, H5.Height, H5.Event, G.installPlayerKeyBoard, G.installPlayerGamePad, G.createWorld, G.AppFlag, G.Sound);

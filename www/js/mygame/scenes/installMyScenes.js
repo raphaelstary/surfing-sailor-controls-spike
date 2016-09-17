@@ -1,5 +1,5 @@
 G.installMyScenes = (function (Scenes, Start, Tutorial, Game, Score, MVVMScene, Scene, Event, Stats, AppFlag, Width,
-    Height, Font, UI) {
+    Height, Font, UI, GoFullScreen) {
     "use strict";
 
     function installMyScenes(services) {
@@ -43,6 +43,11 @@ G.installMyScenes = (function (Scenes, Start, Tutorial, Game, Score, MVVMScene, 
         setColors();
 
         var scenes = new Scenes();
+
+        if (services.device.isMobile) {
+            var goFullScreen = new GoFullScreen(services);
+            scenes.add(goFullScreen.show.bind(goFullScreen), true);
+        }
 
         var start = new Start(services);
         var startScene = new MVVMScene(services, services.scenes[Scene.START], start, Scene.START);
@@ -101,4 +106,4 @@ G.installMyScenes = (function (Scenes, Start, Tutorial, Game, Score, MVVMScene, 
 
     return installMyScenes;
 })(H5.Scenes, G.Start, G.Tutorial, G.Game, G.Score, H5.MVVMScene, G.Scene, H5.Event, H5.Stats, G.AppFlag, H5.Width,
-    H5.Height, H5.Font, G.UI);
+    H5.Height, H5.Font, G.UI, G.GoFullScreen);

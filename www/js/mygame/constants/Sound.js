@@ -12,5 +12,6 @@ G.Sound = {
     WALL_HIT_07: 'wall_hit_07',
     WALL_HIT_08: 'wall_hit_08',
     WALL_HIT_09: 'wall_hit_09',
-    WALL_HIT_10: 'wall_hit_10'
+    WALL_HIT_10: 'wall_hit_10',
+    SABUMY: 'sabumy'
 };
