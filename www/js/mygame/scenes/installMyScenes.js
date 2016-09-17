@@ -24,17 +24,18 @@ G.installMyScenes = (function (Scenes, Start, Tutorial, Game, Score, MVVMScene, 
             var hue = 300;
             var saturation = 75;
             var brightness = 75;
+            var step = 25;
 
             UI.PLAYER_COLOR = toHsl(hue, saturation, brightness);
-            UI.PLAYER_SHADOW_COLOR = toHsl(hue, saturation, brightness - 25);
+            UI.PLAYER_SHADOW_COLOR = toHsl(hue, saturation, brightness - step);
 
-            UI.WALL_COLOR = toHsl(hue, saturation - 50, brightness - 25);
+            UI.WALL_COLOR = toHsl(hue, saturation - step * 2, brightness - step);
 
-            UI.BALL_COLOR = toHsl(hue, saturation - 25, brightness);
-            UI.BALL_SHADOW_COLOR = toHsl(hue, saturation - 25, brightness - 25);
+            UI.BALL_COLOR = toHsl(hue, saturation - step, brightness);
+            UI.BALL_SHADOW_COLOR = toHsl(hue, saturation - step, brightness - step);
 
-            UI.SCREEN_HIGHLIGHT_COLOR = toHsl(hue, saturation - 25, brightness - 25);
-            UI.SCREEN_COLOR = toHsl(hue, saturation, brightness - 50);
+            UI.SCREEN_HIGHLIGHT_COLOR = toHsl(hue, saturation - step, brightness - step);
+            UI.SCREEN_COLOR = toHsl(hue, saturation, brightness - step * 2);
 
             services.screen.style.backgroundColor = UI.SCREEN_COLOR;
         }
