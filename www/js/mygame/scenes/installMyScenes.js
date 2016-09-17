@@ -5,7 +5,41 @@ G.installMyScenes = (function (Scenes, Start, Tutorial, Game, Score, MVVMScene, 
     function installMyScenes(services) {
         // create your scenes and add them to the scene manager
 
-        services.screen.style.backgroundColor = UI.SCREEN_COLOR;
+        function toHsl(hue, saturation, brightness) {
+            var SB = {
+                s: saturation / 100,
+                b: brightness / 100
+            };
+            var SL = {
+                s: 0,
+                l: 0
+            };
+            SL.l = (2 - SB.s) * SB.b / 2;
+            SL.s = SL.l && SL.l < 1 ? SB.s * SB.b / (SL.l < 0.5 ? SL.l * 2 : 2 - SL.l * 2) : SL.s;
+
+            return 'hsl(' + hue + ',' + (SL.s * 100 | 0) + '%,' + (SL.l * 100 | 0) + '%)';
+        }
+
+        function setColors() {
+            var hue = 300;
+            var saturation = 75;
+            var brightness = 75;
+
+            UI.PLAYER_COLOR = toHsl(hue, saturation, brightness);
+            UI.PLAYER_SHADOW_COLOR = toHsl(hue, saturation, brightness - 25);
+
+            UI.WALL_COLOR = toHsl(hue, saturation - 50, brightness - 25);
+
+            UI.BALL_COLOR = toHsl(hue, saturation - 25, brightness);
+            UI.BALL_SHADOW_COLOR = toHsl(hue, saturation - 25, brightness - 25);
+
+            UI.SCREEN_HIGHLIGHT_COLOR = toHsl(hue, saturation - 25, brightness - 25);
+            UI.SCREEN_COLOR = toHsl(hue, saturation, brightness - 50);
+
+            services.screen.style.backgroundColor = UI.SCREEN_COLOR;
+        }
+
+        setColors();
 
         var scenes = new Scenes();
 
