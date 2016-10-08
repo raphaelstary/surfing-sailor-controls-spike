@@ -24,6 +24,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         if (entity.frames)
             entity.frames.forEach(this.__updatePosition, this);
         if (entity.hasFace && AppFlag.PLAYER_FACE) {
+            // todo: if position is always relative to entity itself there is no need for separate entities
+            // (e.g. leftEye and leftEye.drawable)
             this.__updatePosition(this.player.leftEye);
             this.__updatePosition(this.player.rightEye);
             this.__updatePosition(this.player.leftPupil);
