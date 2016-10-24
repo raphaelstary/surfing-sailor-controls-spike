@@ -33,15 +33,12 @@ H5.StageFactory = (function ($) {
         var animationHelper = new $.BasicAnimationHelper(animations);
         var timer = new $.CallbackTimer();
 
-        return new $.Stage(gfxCache, motions, new $.MotionTimer(motions, timer), new $.MotionHelper(motions),
-            spriteAnimations, new $.SpriteTimer(spriteAnimations, timer), animations, animationHelper,
-            new $.BasicAnimationTimer(animations, timer), new $.PropertyAnimations(animations, animationHelper),
-            renderer, timer);
+        return new $.Stage(gfxCache, motions, new $.MotionTimer(motions, timer), new $.MotionHelper(motions), spriteAnimations, new $.SpriteTimer(spriteAnimations, timer), animations, animationHelper, new $.BasicAnimationTimer(animations, timer), new $.PropertyAnimations(animations, animationHelper), renderer, timer);
     }
 
     function createResponsiveLegacy(gfxCache, renderer, device, events) {
-        var stage = new $.ResizableStage(createLegacy(gfxCache, renderer), gfxCache, new $.Repository(),
-            $.Touchables.get, $.fetchDrawableIntoTouchable, device.width, device.height, new $.CallbackTimer());
+        var stage = new $.ResizableStage(createLegacy(gfxCache,
+            renderer), gfxCache, new $.Repository(), $.Touchables.get, $.fetchDrawableIntoTouchable, device.width, device.height, new $.CallbackTimer());
 
         events.subscribe($.Event.RESIZE, stage.resize.bind(stage));
 
@@ -70,8 +67,7 @@ H5.StageFactory = (function ($) {
             'radius'
         ];
         var legacyStage = createLegacy(gfxCache, renderer);
-        var stage = new $.NewStageAPI(legacyStage, gfxCache, new $.KeyRepository(repoKeys), device.width, device.height,
-            new $.CallbackTimer());
+        var stage = new $.NewStageAPI(legacyStage, gfxCache, new $.KeyRepository(repoKeys), device.width, device.height, new $.CallbackTimer());
 
         if (!device.isLowRez)
             events.subscribe($.Event.RESIZE, stage.resize.bind(stage));

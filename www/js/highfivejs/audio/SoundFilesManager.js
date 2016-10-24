@@ -28,4 +28,5 @@ H5.SoundFilesManager = (function (Howl) {
     };
 
     return SoundFilesManager;
-})(function(){});
+})(function () {
+});

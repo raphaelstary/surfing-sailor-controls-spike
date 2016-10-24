@@ -1,22 +1,9 @@
 "use strict";
 
-var WWW_BUILT = 'www-built',
-    WWW = 'www',
-    INDEX = 'index.html',
-    MANIFEST = 'manifest.json',
-    GFX = 'gfx',
-    DATA = 'data',
-    SFX = 'sfx',
-    MIN_JS = 'min.js',
-    MIN_CSS = 'min.css';
+var WWW_BUILT = 'www-built', WWW = 'www', INDEX = 'index.html', MANIFEST = 'manifest.json', GFX = 'gfx', DATA = 'data', SFX = 'sfx', MIN_JS = 'min.js', MIN_CSS = 'min.css';
 
-var UglifyJS = require("uglify-js"),
-    UglifyCSS = require('uglifycss'),
-    cheerio = require('cheerio'),
-    fs = require('fs'),
-    minifyJSON = require("node-json-minify"),
-    Minimize = require('minimize'),
-    minimize = new Minimize();
+var UglifyJS = require("uglify-js"), UglifyCSS = require('uglifycss'), cheerio = require('cheerio'), fs = require(
+    'fs'), minifyJSON = require("node-json-minify"), Minimize = require('minimize'), minimize = new Minimize();
 
 buildTheProject();
 
@@ -37,16 +24,13 @@ function buildTheProject() {
             writeCssFile(minifiedCSS);
 
             var newIndex = updateSources($);
-            minifyHtml(newIndex,
-                writeIndexFile);
+            minifyHtml(newIndex, writeIndexFile);
 
             cpdir(WWW + '/' + GFX, WWW_BUILT + '/' + GFX);
             cpdir(WWW + '/' + DATA, WWW_BUILT + '/' + DATA);
             cpdir(WWW + '/' + SFX, WWW_BUILT + '/' + SFX);
 
-            minifyJSONFile(WWW, MANIFEST,
-                writeFile.bind(null, WWW_BUILT, MANIFEST)
-            );
+            minifyJSONFile(WWW, MANIFEST, writeFile.bind(null, WWW_BUILT, MANIFEST));
         });
     });
 }
@@ -103,9 +87,7 @@ function cpDirFiles(srcPath, destPath) {
                 return;
 
             if (isJSON(file)) {
-                minifyJSONFile(srcPath, file,
-                    writeFile.bind(null, destPath, file)
-                );
+                minifyJSONFile(srcPath, file, writeFile.bind(null, destPath, file));
             } else {
                 cp(srcPath, file, destPath);
             }
@@ -171,7 +153,7 @@ function minifyJS($) {
     var minified = UglifyJS.minify(allScripts).code;
 
     console.log('success task: minify JS');
-    return  minified;
+    return minified;
 }
 
 function minifyCSS($) {
@@ -181,7 +163,7 @@ function minifyCSS($) {
     var minified = UglifyCSS.processFiles(allCSS, {uglyComments: true});
 
     console.log('success task: minify CSS');
-    return  minified;
+    return minified;
 }
 
 function updateSources($) {
@@ -200,5 +182,5 @@ function updateSources($) {
     var html = $.html();
 
     console.log("success task: update html sources");
-    return  html;
+    return html;
 }

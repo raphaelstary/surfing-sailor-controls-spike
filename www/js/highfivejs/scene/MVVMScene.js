@@ -239,8 +239,8 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
                 if (elem.type == 'image') {
                     var imgName = elem.filename.substring(0, elem.filename.lastIndexOf('.'));
 
-                    drawable = this.stage.createImage(imgName).setPosition(x,
-                        y).setAlpha(elem.alpha).setRotation(elem.rotation).setScale(elem.scale);
+                    drawable = this.stage.createImage(imgName).setPosition(x, y).setAlpha(elem.alpha)
+                        .setRotation(elem.rotation).setScale(elem.scale);
                     if (elem.zIndex != undefined && elem.zIndex != 3)
                         drawable.setZIndex(elem.zIndex);
 
@@ -254,10 +254,11 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
                     var txtKey = elem.tags ? getTagValue('txt')(elem.tags) : undefined;
                     var msg = txtKey ? self.messages.get(self.viewName, txtKey) : elem.msg;
 
-                    drawable = this.stage.createText(msg).setPosition(x,
-                        y).setSize(txtSize(elem.size)).setFont(elem.font).setColor(elem.color).setRotation(elem.rotation).setAlpha(elem.alpha).setScale(elem.scale);
-                    if (elem.fontStyle && elem.fontStyle.trim().toLowerCase() != 'regular'
-                        && elem.fontStyle.trim().toLowerCase() != 'normal') {
+                    drawable = this.stage.createText(msg).setPosition(x, y).setSize(txtSize(elem.size))
+                        .setFont(elem.font).setColor(elem.color).setRotation(elem.rotation).setAlpha(elem.alpha)
+                        .setScale(elem.scale);
+                    if (elem.fontStyle && elem.fontStyle.trim().toLowerCase() != 'regular' &&
+                        elem.fontStyle.trim().toLowerCase() != 'normal') {
                         var style = elem.fontStyle.trim().toLowerCase();
                         drawable.setStyle(style == 'light' ? 'lighter' : style);
                     }
@@ -283,8 +284,8 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
                     }
 
                 } else if (elem.type == 'line') {
-                    drawable = this.stage.createLine().setPosition(x,
-                        y).setLength(txtSize(elem.length)).setColor(elem.color);
+                    drawable = this.stage.createLine().setPosition(x, y).setLength(txtSize(elem.length))
+                        .setColor(elem.color);
 
                     drawable.setLineWidth(txtSize(elem.lineWidth));
                     drawable.setAlpha(elem.alpha).setRotation(elem.rotation).setScale(elem.scale);
@@ -299,8 +300,8 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
                     }
 
                 } else if (elem.type == 'circle') {
-                    drawable = this.stage.createCircle(elem.filled).setPosition(x,
-                        y).setRadius(txtSize(elem.radius)).setColor(elem.color);
+                    drawable = this.stage.createCircle(elem.filled).setPosition(x, y).setRadius(txtSize(elem.radius))
+                        .setColor(elem.color);
 
                     drawable.setLineWidth(txtSize(elem.lineWidth));
                     drawable.setAlpha(elem.alpha);
@@ -343,8 +344,8 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
                             return foundSmth;
                         });
 
-                        drawable = this.stage.createRectangle().setPosition(x,
-                            y).setWidth(widthFn(elem.width)).setHeight(heightFn(elem.height)).setColor('blue');
+                        drawable = this.stage.createRectangle().setPosition(x, y).setWidth(widthFn(elem.width))
+                            .setHeight(heightFn(elem.height)).setColor('blue');
                         drawable.setZIndex(11);
                         drawable.hide();
 
@@ -379,8 +380,9 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
 
                     } else {
 
-                        drawable = this.stage.createRectangle(elem.filled).setPosition(x,
-                            y).setWidth(widthFn(elem.width)).setHeight(heightFn(elem.height)).setColor(elem.color).setAlpha(elem.alpha).setRotation(elem.rotation).setScale(elem.scale);
+                        drawable = this.stage.createRectangle(elem.filled).setPosition(x, y)
+                            .setWidth(widthFn(elem.width)).setHeight(heightFn(elem.height)).setColor(elem.color)
+                            .setAlpha(elem.alpha).setRotation(elem.rotation).setScale(elem.scale);
                         if (elem.zIndex != undefined && elem.zIndex != 3)
                             drawable.setZIndex(elem.zIndex);
 
@@ -426,8 +428,8 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
                         return foundSmth;
                     });
 
-                    drawable = this.stage.createRectangle().setPosition(xFn(elem.input.x),
-                        yFn(elem.input.y)).setWidth(xFn(elem.input.width)).setHeight(yFn(elem.input.height)).setColor('#fff');
+                    drawable = this.stage.createRectangle().setPosition(xFn(elem.input.x), yFn(elem.input.y))
+                        .setWidth(xFn(elem.input.width)).setHeight(yFn(elem.input.height)).setColor('#fff');
                     drawable.hide();
 
                     if (elem.input.viewId) {
@@ -445,8 +447,9 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
                     var btnTxtKey = getTagValue('txt')(elem.text.tags);
                     var btnMsg = btnTxtKey ? self.messages.get(self.viewName, btnTxtKey) : elem.text.msg;
 
-                    drawable = this.stage.createText(btnMsg).setPosition(xFn(elem.text.x),
-                        yFn(elem.text.y)).setSize(txtSize(elem.text.size)).setFont(elem.text.font).setColor(elem.text.color).setRotation(elem.text.rotation).setAlpha(elem.text.alpha).setScale(elem.text.scale);
+                    drawable = this.stage.createText(btnMsg).setPosition(xFn(elem.text.x), yFn(elem.text.y))
+                        .setSize(txtSize(elem.text.size)).setFont(elem.text.font).setColor(elem.text.color)
+                        .setRotation(elem.text.rotation).setAlpha(elem.text.alpha).setScale(elem.text.scale);
                     if (elem.zIndex + 1 != 3)
                         drawable.setZIndex(elem.zIndex + 1);
                     drawables.push(drawable);
@@ -461,8 +464,9 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
 
                     if (elem.background.type == 'image') {
                         var bgName = elem.background.filename.substring(0, elem.background.filename.lastIndexOf('.'));
-                        drawable = this.stage.createImage(bgName).setPosition(xFn(elem.background.x),
-                            yFn(elem.background.y)).setAlpha(elem.background.alpha).setRotation(elem.background.rotation).setScale(elem.background.scale);
+                        drawable = this.stage.createImage(bgName)
+                            .setPosition(xFn(elem.background.x), yFn(elem.background.y)).setAlpha(elem.background.alpha)
+                            .setRotation(elem.background.rotation).setScale(elem.background.scale);
                         if (elem.zIndex != undefined && elem.zIndex != 3)
                             drawable.setZIndex(elem.zIndex);
                         drawables.push(drawable);
@@ -472,8 +476,11 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
                         }
 
                     } else if (elem.background.type == 'rectangle') {
-                        drawable = this.stage.createRectangle(elem.background.filled).setPosition(xFn(elem.background.x),
-                            yFn(elem.background.y)).setWidth(xFn(elem.background.width)).setHeight(yFn(elem.background.height)).setColor(elem.background.color).setAlpha(elem.background.alpha).setRotation(elem.background.rotation).setScale(elem.background.scale);
+                        drawable = this.stage.createRectangle(elem.background.filled)
+                            .setPosition(xFn(elem.background.x), yFn(elem.background.y))
+                            .setWidth(xFn(elem.background.width)).setHeight(yFn(elem.background.height))
+                            .setColor(elem.background.color).setAlpha(elem.background.alpha)
+                            .setRotation(elem.background.rotation).setScale(elem.background.scale);
                         if (elem.zIndex != undefined && elem.zIndex != 3)
                             drawable.setZIndex(elem.zIndex);
                         drawables.push(drawable);
@@ -494,8 +501,8 @@ H5.MVVMScene = (function (iterateEntries, Width, Height, Event, Math, calcScreen
                         maskX = getXPositionRelativeToSize_anchorWithHalf(sceneRect, elem.mask.height, elem.mask.x);
                     }
 
-                    var mask = this.stage.createRectangle().setPosition(maskX,
-                        maskY).setWidth(xFn(elem.mask.width)).setHeight(yFn(elem.mask.height)).setRotation(elem.mask.rotation);
+                    var mask = this.stage.createRectangle().setPosition(maskX, maskY).setWidth(xFn(elem.mask.width))
+                        .setHeight(yFn(elem.mask.height)).setRotation(elem.mask.rotation);
                     if (self.parentSceneRect) {
                         var maskWidth = function (maskWidth) {
                             return function (width, height) {

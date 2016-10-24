@@ -48,7 +48,8 @@ H5.Bootstrapper = (function ($) {
 
         var screen = useLowRez ?
             $.installCanvas(events, device, optionalCanvas, $.width, $.height, $.getDevicePixelRatio(), lowRezWidth,
-                lowRezHeight) : $.installCanvas(events, device, optionalCanvas, $.width, $.height, $.getDevicePixelRatio());
+                lowRezHeight) :
+            $.installCanvas(events, device, optionalCanvas, $.width, $.height, $.getDevicePixelRatio());
 
         if (useLowRez) {
             device.width = lowRezWidth;

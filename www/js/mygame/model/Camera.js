@@ -17,6 +17,7 @@ G.Camera = (function () {
 
         drawable.x = entity.x - cornerX * this.viewPort.scale;
         drawable.y = entity.y - cornerY * this.viewPort.scale;
+        drawable.rotation = entity.rotation;
     };
 
     Camera.prototype.move = function (anchor) {

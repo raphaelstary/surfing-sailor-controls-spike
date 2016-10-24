@@ -60,8 +60,8 @@ H5.ButtonFactory = (function (Math, Width) {
 
         var isMultiSubmitOn = multiSubmit !== undefined ? multiSubmit : false;
 
-        var textDrawable = this.stage.createText(msg).setPosition(xFn,
-            yFn).setSize(txtSizeFn).setFont(this.font).setColor(textColor).setZIndex(zIndex + 1).setAlpha(textAlpha);
+        var textDrawable = this.stage.createText(msg).setPosition(xFn, yFn).setSize(txtSizeFn).setFont(this.font)
+            .setColor(textColor).setZIndex(zIndex + 1).setAlpha(textAlpha);
 
         function getWidth(width) {
             var max = Width.get(10, 9)(width);
@@ -73,9 +73,9 @@ H5.ButtonFactory = (function (Math, Width) {
             return Math.floor(textDrawable.getHeight() * 2.5);
         }
 
-        var backgroundDrawable = this.stage.createRectangle(backgroundFilled).setPosition(xFn, yFn,
-            [textDrawable]).setWidth(widthFn ? widthFn : getWidth).setHeight(heightFn ? heightFn :
-                getHeight).setColor(color).setZIndex(zIndex).setAlpha(0.5);
+        var backgroundDrawable = this.stage.createRectangle(backgroundFilled).setPosition(xFn, yFn, [textDrawable])
+            .setWidth(widthFn ? widthFn : getWidth).setHeight(heightFn ? heightFn : getHeight).setColor(color)
+            .setZIndex(zIndex).setAlpha(0.5);
         if (lineWidthFn)
             backgroundDrawable.setLineWidth(lineWidthFn);
 

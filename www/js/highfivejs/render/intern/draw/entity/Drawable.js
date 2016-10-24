@@ -87,7 +87,7 @@ H5.Drawable = (function (Math, measureText, TextWrapper, SubImage, ImageWrapper,
     };
 
     Drawable.prototype.__getWidth = function () {
-        if (this.data instanceof  TextWrapper) {
+        if (this.data instanceof TextWrapper) {
             return measureText(this.data).width;
         }
         if (this.data instanceof SubImage) {

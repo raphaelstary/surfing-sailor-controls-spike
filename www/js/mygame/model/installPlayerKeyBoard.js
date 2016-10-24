@@ -5,31 +5,42 @@ G.installPlayerKeyBoard = (function (Event, Key) {
         var leftPressed = false;
         var rightPressed = false;
         var downPressed = false;
+        var upPressed = false;
 
         return events.subscribe(Event.KEY_BOARD, function (keyBoard) {
             if (keyBoard[Key.LEFT] && !leftPressed) {
                 leftPressed = true;
-                playerController.jumpLeft();
+                playerController.handleLeftKeyDown();
             } else if (!keyBoard[Key.LEFT] && leftPressed) {
                 leftPressed = false;
+                playerController.handleLeftKeyUp();
             }
 
             if (keyBoard[Key.RIGHT] && !rightPressed) {
                 rightPressed = true;
-                playerController.jumpRight();
+                playerController.handleRightKeyDown();
             } else if (!keyBoard[Key.RIGHT] && rightPressed) {
                 rightPressed = false;
+                playerController.handleRightKeyUp();
             }
 
             if (keyBoard[Key.DOWN] && !downPressed) {
                 downPressed = true;
-                playerController.down();
+                playerController.handleDownKeyDown();
             } else if (!keyBoard[Key.DOWN] && downPressed) {
                 downPressed = false;
+                playerController.handleDownKeyUp();
             }
 
-            if (keyBoard[Key.SPACE])
-                playerController.spawnBall();
+            if (keyBoard[Key.UP] && !upPressed) {
+                upPressed = true;
+                playerController.handleUpKeyDown();
+            } else if (!keyBoard[Key.UP] && upPressed) {
+                upPressed = false;
+                playerController.handleUpKeyUp();
+            }
+
+
         });
     }
 

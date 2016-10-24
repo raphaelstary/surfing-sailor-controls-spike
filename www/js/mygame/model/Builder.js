@@ -98,7 +98,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         var drawable = this.stage.createRectangle(true)
             .setColor(color)
             .setWidth(function (width, height) {
-                return Math.floor(height / UI.HEIGHT * GamePlay.TILE * 12);
+                return Math.floor(height / UI.HEIGHT * GamePlay.TILE * 3);
             })
             .setHeight(Height.get(UI.HEIGHT, GamePlay.TILE * 2));
 
@@ -111,17 +111,33 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         return drawable;
     };
 
+    Builder.prototype.__createShadowPlayer = function (color, alpha, zIndex) {
+        var drawable = this.stage.createCircle(true)
+            .setColor(color)
+            .setRadius(function (width, height) {
+                return Math.floor(height / UI.HEIGHT * GamePlay.TILE);
+            });
+
+        if (alpha)
+            drawable.setAlpha(alpha);
+
+        if (zIndex)
+            drawable.setZIndex(zIndex);
+
+        return drawable;
+    };
+
     Builder.prototype.__createPlayerEntity = function () {
-        var player = this.__createPlayer(UI.PLAYER_COLOR).setPosition(Width.HALF, Height.get(6, 5));
+        var player = this.__createPlayer(UI.PLAYER_COLOR).setPosition(Width.HALF, Height.get(6, 5)).setRotation(0);
         player.show = false;
         player.drawable = this.__createPlayer(UI.PLAYER_COLOR).setPosition(Width.HALF, Height.get(6, 5));
         return player;
     };
 
     Builder.prototype.__createShadow = function (color, alpha, zIndex) {
-        var shadow = this.__createPlayer(color, alpha, zIndex);
+        var shadow = this.__createShadowPlayer(color, alpha, zIndex);
         shadow.show = false;
-        shadow.drawable = this.__createPlayer(color, alpha, zIndex);
+        shadow.drawable = this.__createShadowPlayer(color, alpha, zIndex);
         return shadow;
     };
 
@@ -221,11 +237,91 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
         if (AppFlag.PLAYER_SHADOW)
             player.shadows = [
-                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 1, 2),
+                // this.__createShadow(UI.PLAYER_SHADOW_COLOR, 1, 2),
                 this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
-                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.6, 2),
-                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.4, 2),
-                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.2, 2)
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2),
+                this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.8, 2)
+                // this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.6, 2),
+                // this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.4, 2),
+                // this.__createShadow(UI.PLAYER_SHADOW_COLOR, 0.2, 2)
             ];
 
         player.lastX = player.x;

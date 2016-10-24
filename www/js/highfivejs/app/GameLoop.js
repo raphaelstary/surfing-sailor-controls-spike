@@ -27,6 +27,7 @@ H5.GameLoop = (function (requestAnimationFrame, Event) {
 
         // input phase
         this.events.fireSync(Event.TICK_INPUT);
+        this.events.fireSync(Event.TICK_POST_INPUT);
 
         // move phase
         if (this.isMove)
@@ -36,6 +37,7 @@ H5.GameLoop = (function (requestAnimationFrame, Event) {
         if (this.isCollision) {
             this.events.fireSync(Event.TICK_COLLISION);
             this.events.fireSync(Event.TICK_POST_COLLISION);
+            this.events.fireSync(Event.TICK_POST_POST_COLLISION);
         }
 
         // pre draw phase

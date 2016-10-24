@@ -15,7 +15,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
 
     //noinspection JSUnusedGlobalSymbols
     Game.prototype.leftDown = function () {
-        this.controller.jumpLeft();
+        // this.controller.jumpLeft();
     };
 
     //noinspection JSUnusedGlobalSymbols
@@ -24,7 +24,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
 
     //noinspection JSUnusedGlobalSymbols
     Game.prototype.rightDown = function () {
-        this.controller.jumpRight();
+        // this.controller.jumpRight();
     };
 
     //noinspection JSUnusedGlobalSymbols
@@ -33,7 +33,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
 
     //noinspection JSUnusedGlobalSymbols
     Game.prototype.bottomDown = function () {
-        this.controller.down();
+        // this.controller.down();
     };
 
     /** @this Game */
@@ -41,6 +41,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
         var isOver = false;
         var score = 0;
 
+        this.counter.show = false;
         this.counter.setText('0');
         this.counter.setPosition(Width.HALF, Height.HALF);
 
@@ -107,13 +108,10 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
     Game.prototype.__registerEventListeners = function () {
         this.keyBoardControls = installPlayerKeyBoard(this.events, this.controller);
         this.gamePadControls = installPlayerGamePad(this.events, this.controller);
+        this.controls = this.events.subscribe(Event.TICK_POST_INPUT, this.controller.update.bind(this.controller));
 
         this.playerMovement = this.events.subscribe(Event.TICK_MOVE, this.world.updatePlayerMovement.bind(this.world));
-        this.ballMovement = this.events.subscribe(Event.TICK_MOVE, this.world.updateBallMovement.bind(this.world));
-        if (AppFlag.PLAYER_FACE)
-            this.eyeMovement = this.events.subscribe(Event.TICK_POST_COLLISION, this.world.updateEyes.bind(this.world));
-        this.playerBallCollision = this.events.subscribe(Event.TICK_POST_COLLISION,
-            this.world.checkBallPaddleCollision.bind(this.world));
+
         this.wallCollision = this.events.subscribe(Event.TICK_COLLISION, this.world.checkCollisions.bind(this.world));
         this.paddleForce = this.events.subscribe(Event.RESIZE, this.controller.resize.bind(this.controller));
         this.ballForce = this.events.subscribe(Event.RESIZE, this.builder.resize.bind(this.builder));
@@ -124,11 +122,10 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
     Game.prototype.preDestroy = function () {
         this.events.unsubscribe(this.keyBoardControls);
         this.events.unsubscribe(this.gamePadControls);
+        this.events.unsubscribe(this.controls);
+
         this.events.unsubscribe(this.playerMovement);
-        this.events.unsubscribe(this.ballMovement);
-        if (AppFlag.PLAYER_FACE)
-            this.events.unsubscribe(this.eyeMovement);
-        this.events.unsubscribe(this.playerBallCollision);
+
         this.events.unsubscribe(this.wallCollision);
         this.events.unsubscribe(this.paddleForce);
         this.events.unsubscribe(this.ballForce);

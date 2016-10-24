@@ -27,6 +27,6 @@ G.UI = {
     SCORE_HIGHLIGHT_COLOR: '#434343',
     SCORE_COLOR: '#f4f4f4',
 
-    WIDTH: 750,
+    WIDTH: 1334,
     HEIGHT: 1334
 };

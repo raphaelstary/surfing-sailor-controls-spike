@@ -17,7 +17,7 @@ G.createWorld = (function (Builder, PlayerController, World, Camera, createViewP
         function initLevel() {
             var player = builder.createPlayer();
             builder.createDefaultWalls();
-            builder.createRandomBall();
+            // builder.createRandomBall();
 
             return player;
         }

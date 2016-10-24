@@ -44,30 +44,30 @@ G.installMyScenes = (function (Scenes, Start, Tutorial, Game, Score, MVVMScene, 
 
         var scenes = new Scenes();
 
-        if (services.device.isMobile) {
-            var goFullScreen = new GoFullScreen(services);
-            scenes.add(goFullScreen.show.bind(goFullScreen), true);
-        }
+        // if (services.device.isMobile) {
+        //     var goFullScreen = new GoFullScreen(services);
+        //     scenes.add(goFullScreen.show.bind(goFullScreen), true);
+        // }
 
-        var start = new Start(services);
-        var startScene = new MVVMScene(services, services.scenes[Scene.START], start, Scene.START);
+        // var start = new Start(services);
+        // var startScene = new MVVMScene(services, services.scenes[Scene.START], start, Scene.START);
+        //
+        // scenes.add(startScene.show.bind(startScene), true);
 
-        scenes.add(startScene.show.bind(startScene), true);
-
-        var tutorial = new Tutorial(services);
-        var tutorialScene = new MVVMScene(services, services.scenes[Scene.TUTORIAL], tutorial, Scene.TUTORIAL);
-
-        scenes.add(tutorialScene.show.bind(tutorialScene), true);
+        // var tutorial = new Tutorial(services);
+        // var tutorialScene = new MVVMScene(services, services.scenes[Scene.TUTORIAL], tutorial, Scene.TUTORIAL);
+        //
+        // scenes.add(tutorialScene.show.bind(tutorialScene), true);
 
         var game = new Game(services);
         var gameScene = new MVVMScene(services, services.scenes[Scene.GAME], game, Scene.GAME);
 
         scenes.add(gameScene.show.bind(gameScene));
 
-        var score = new Score(services);
-        var scoreScene = new MVVMScene(services, services.scenes[Scene.SCORE], score, Scene.SCORE);
-
-        scenes.add(scoreScene.show.bind(scoreScene));
+        // var score = new Score(services);
+        // var scoreScene = new MVVMScene(services, services.scenes[Scene.SCORE], score, Scene.SCORE);
+        //
+        // scenes.add(scoreScene.show.bind(scoreScene));
 
         services.events.subscribe(Event.TICK_START, Stats.start);
         services.events.subscribe(Event.TICK_END, Stats.end);
