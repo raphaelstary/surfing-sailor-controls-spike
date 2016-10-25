@@ -43,12 +43,20 @@ G.installPlayerKeyBoard = (function (Event, Key) {
                 playerController.handleUpKeyUp();
             }
 
-            if (keyBoard[Key.Q] && !upPressed) {
-                upPressed = true;
-                playerController.handleUpKeyDown();
-            } else if (!keyBoard[Key.UP] && upPressed) {
-                upPressed = false;
-                playerController.handleUpKeyUp();
+            if (keyBoard[Key.Q] && !speedUpPressed) {
+                speedUpPressed = true;
+                playerController.speedUp();
+            } else if (!keyBoard[Key.Q] && speedUpPressed) {
+                speedUpPressed = false;
+                // playerController.handleUpKeyUp();
+            }
+
+            if (keyBoard[Key.A] && !speedDownPressed) {
+                speedDownPressed = true;
+                playerController.speedDown();
+            } else if (!keyBoard[Key.A] && speedDownPressed) {
+                speedDownPressed = false;
+                // playerController.handleUpKeyUp();
             }
         });
     }

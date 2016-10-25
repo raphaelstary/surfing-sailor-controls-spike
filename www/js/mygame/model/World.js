@@ -1,7 +1,7 @@
 G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     "use strict";
 
-    function World(device, camera, shaker, view, player, scenery, balls, obstacles, gameOverFn, speedometer) {
+    function World(device, camera, shaker, view, player, scenery, balls, obstacles, gameOverFn) {
         this.scenery = scenery;
         this.player = player;
         this.balls = balls;
@@ -14,10 +14,27 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         this.paddleHitFn = function () {
         };
         this.gameOverFn = gameOverFn;
-        this.speedometer = speedometer;
 
         this.resize(device);
+
+        this.currentSpeed = GamePlay.SLOW_SPEED;
     }
+
+    World.prototype.speedUp = function () {
+        if (this.currentSpeed == GamePlay.SLOW_SPEED) {
+            this.currentSpeed = GamePlay.MEDIUM_SPEED;
+        } else if (this.currentSpeed == GamePlay.MEDIUM_SPEED) {
+            this.currentSpeed = GamePlay.FAST_SPEED;
+        }
+    };
+
+    World.prototype.speedDown = function () {
+        if (this.currentSpeed == GamePlay.FAST_SPEED) {
+            this.currentSpeed = GamePlay.MEDIUM_SPEED;
+        } else if (this.currentSpeed == GamePlay.MEDIUM_SPEED) {
+            this.currentSpeed = GamePlay.SLOW_SPEED;
+        }
+    };
 
     World.prototype.__updatePosition = function (entity) {
         this.camera.calcScreenPosition(entity, entity.drawable);
@@ -64,8 +81,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         player.forceX *= airResistance;
         player.forceY *= airResistance;
 
-        forceX = Vectors.getX(0, GamePlay.BOAT_SPEED, this.player.rotation);
-        forceY = Vectors.getY(0, GamePlay.BOAT_SPEED, this.player.rotation);
+        forceX = Vectors.getX(0, this.currentSpeed, this.player.rotation);
+        forceY = Vectors.getY(0, this.currentSpeed, this.player.rotation);
 
         forceX += player.forceX;
         forceY += player.forceY;

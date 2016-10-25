@@ -1,9 +1,10 @@
 G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
     "use strict";
 
-    function PlayerController(device, player, builder) {
+    function PlayerController(device, player, builder, world) {
         this.player = player;
         this.builder = builder;
+        this.world = world;
         this.resize(device);
 
         this.__leftPressed = false;
@@ -79,6 +80,16 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
 
     PlayerController.prototype.down = function () {
 
+    };
+
+    PlayerController.prototype.speedUp = function () {
+        this.builder.speedUp();
+        this.world.speedUp();
+    };
+
+    PlayerController.prototype.speedDown = function () {
+        this.builder.speedDown();
+        this.world.speedDown();
     };
 
     return PlayerController;

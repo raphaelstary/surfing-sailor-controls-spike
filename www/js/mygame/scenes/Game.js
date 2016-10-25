@@ -49,15 +49,6 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
 
         var self = this;
 
-        function count() {
-            score++;
-            self.counter.setText(score.toString());
-
-            if (score % 10 == 0) {
-                wrapper.builder.createRandomBall();
-            }
-        }
-
         function gameOver() {
             if (isOver)
                 return;
@@ -68,7 +59,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
             }, 5);
         }
 
-        var wrapper = createWorld(this.services, count, gameOver, this.counter);
+        var wrapper = createWorld(this.services, gameOver, this.counter);
 
         this.camera = this.events.subscribe(Event.TICK_CAMERA, wrapper.world.updateCamera.bind(wrapper.world));
         this.world = wrapper.world;

@@ -16,6 +16,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
 
         this.camera = camera;
         this.counter = speedometer;
+        this.speedometer = speedometer;
 
         this.resize(services.device);
 
@@ -35,6 +36,26 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
             Sound.WALL_HIT_10
         ];
     }
+
+    Builder.prototype.speedUp = function () {
+        var speed = this.speedometer.data.msg;
+
+        if (speed == 'slow') {
+            this.speedometer.setText('medium');
+        } else if (speed == 'medium') {
+            this.speedometer.setText('fast');
+        }
+    };
+
+    Builder.prototype.speedDown = function () {
+        var speed = this.speedometer.data.msg;
+
+        if (speed == 'fast') {
+            this.speedometer.setText('medium');
+        } else if (speed == 'medium') {
+            this.speedometer.setText('slow');
+        }
+    };
 
     Builder.prototype.resize = function (event) {
         this.magnitude = Math.floor(event.height / UI.HEIGHT * GamePlay.MAGNITUDE);

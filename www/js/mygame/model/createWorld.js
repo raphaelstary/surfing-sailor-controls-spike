@@ -23,10 +23,11 @@ G.createWorld = (function (Builder, PlayerController, World, Camera, createViewP
         }
 
         var player = initLevel();
-        var playerController = new PlayerController(services.device, player, builder);
+        var world = new World(services.device, camera, shaker, builder, player, scenery, balls, obstacles, gameOverFn);
+        var playerController = new PlayerController(services.device, player, builder, world);
 
         return {
-            world: new World(services.device, camera, shaker, builder, player, scenery, balls, obstacles, gameOverFn, speedometer),
+            world: world,
             builder: builder,
             controller: playerController,
             camera: camera,
