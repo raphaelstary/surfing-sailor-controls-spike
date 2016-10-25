@@ -152,6 +152,14 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         var player = this.__createPlayer(UI.PLAYER_COLOR).setPosition(Width.HALF, Height.get(6, 5)).setRotation(0);
         player.show = false;
         player.drawable = this.__createPlayer(UI.PLAYER_COLOR).setPosition(Width.HALF, Height.get(6, 5));
+
+        if (AppFlag.DEBUG) {
+            player.currentVelocity = this.stage.createLine().setColor('green');
+            player.currentVelocity.anchorOffsetX = 50;
+            player.desiredVelocity = this.stage.createLine().setColor('red');
+            player.desiredVelocity.anchorOffsetX = 50;
+        }
+
         return player;
     };
 
@@ -348,7 +356,12 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         player.lastX = player.x;
         player.lastY = player.y;
         player.forceX = 0;
+        player.lastForceX = 0;
         player.forceY = 0;
+        player.lastForceY = 0;
+        player.lastForceRotation = 0;
+
+        player.direction = 0;
 
         return player;
     };

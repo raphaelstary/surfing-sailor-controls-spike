@@ -11,13 +11,13 @@ G.Camera = (function () {
         // - while screen coordinates are relative, space coordinates are an absolute representation of tiles in px
     }
 
-    Camera.prototype.calcScreenPosition = function (entity, drawable) {
+    Camera.prototype.calcScreenPosition = function (entity, drawable, customRotation) {
         var cornerX = this.viewPort.getCornerX();
         var cornerY = this.viewPort.getCornerY();
 
         drawable.x = entity.x - cornerX * this.viewPort.scale;
         drawable.y = entity.y - cornerY * this.viewPort.scale;
-        drawable.rotation = entity.rotation;
+        drawable.rotation = customRotation !== undefined ? customRotation : entity.rotation;
     };
 
     Camera.prototype.move = function (anchor) {

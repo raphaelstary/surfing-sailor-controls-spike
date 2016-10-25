@@ -52,6 +52,20 @@ H5.Vectors = (function (Math) {
             return degrees * Math.PI / 180;
         },
 
+        toDegrees: function (radians) {
+            return radians * 180 / Math.PI;
+        },
+
+        normalizeDegrees: function (degree) {//todo: find out what's the right wording? shift, translate, transform, normalise?
+            return (degree + 180 + 360) % 360 - 180;
+        },
+
+        normalizeAngle: function (radians) {//todo: find out what's the right wording? shift, translate, transform, normalise?
+            var halfTurn = Math.PI;
+            var turn = 2 * Math.PI;
+            return (radians + halfTurn + turn) % turn - halfTurn;
+        },
+
         getX: function (pointX, magnitude, angle) {
             return pointX + magnitude * Math.cos(angle);
         },

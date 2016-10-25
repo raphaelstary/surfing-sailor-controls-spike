@@ -7,10 +7,16 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
         this.world = world;
         this.resize(device);
 
+        this.__1 = 0.03;
+        this.__2 = 0.03;
+        this.__3 = 0.03;
+
         this.__leftPressed = false;
         this.__rightPressed = false;
         this.__downPressed = false;
         this.__upPressed = false;
+
+        this.__turn = Math.PI * 2;
     }
 
     PlayerController.prototype.resize = function (event) {
@@ -66,12 +72,41 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
         this.__downPressed = false;
     };
 
+    PlayerController.prototype.__getRotationValue = function () {
+        if (this.world.currentSpeed == GamePlay.SLOW_SPEED) {
+            return this.__1;
+        } else if (this.world.currentSpeed == GamePlay.MEDIUM_SPEED) {
+            return this.__2;
+        }
+        return this.__3;
+    };
+
+    PlayerController.prototype.__greaterThanMaxTurn = function () {
+        var maxTurn = Math.PI / 4;
+        var diff = Math.abs(this.player.rotation - this.player.direction);
+        return diff < Math.PI && diff > maxTurn;
+    };
+
     PlayerController.prototype.left = function () {
-        this.player.rotation += Vectors.toRadians(-1);
+        var lastRotation = this.player.rotation;
+
+        this.player.rotation -= this.__getRotationValue();
+        if (this.player.rotation < 0)
+            this.player.rotation += this.__turn;
+
+        if (this.__greaterThanMaxTurn())
+            this.player.rotation = lastRotation;
     };
 
     PlayerController.prototype.right = function () {
-        this.player.rotation += Vectors.toRadians(1);
+        var lastRotation = this.player.rotation;
+
+        this.player.rotation += this.__getRotationValue();
+        if (this.player.rotation > this.__turn)
+            this.player.rotation -= this.__turn;
+
+        if (this.__greaterThanMaxTurn())
+            this.player.rotation = lastRotation;
     };
 
     PlayerController.prototype.up = function () {

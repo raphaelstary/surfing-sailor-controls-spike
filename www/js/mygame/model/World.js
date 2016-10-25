@@ -18,6 +18,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         this.resize(device);
 
         this.currentSpeed = GamePlay.SLOW_SPEED;
+        this.__turn = Math.PI * 2;
     }
 
     World.prototype.speedUp = function () {
@@ -42,6 +43,10 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             entity.shadows.forEach(this.__updatePosition, this);
         if (entity.frames)
             entity.frames.forEach(this.__updatePosition, this);
+        if (entity.currentVelocity)
+            this.camera.calcScreenPosition(entity, entity.currentVelocity, entity.direction);
+        if (entity.desiredVelocity)
+            this.camera.calcScreenPosition(entity, entity.desiredVelocity);
     };
 
     World.prototype.updateCamera = function () {
@@ -51,12 +56,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         this.obstacles.forEach(this.__updatePosition, this);
     };
 
-    var airResistance = 0.9;
-
     World.prototype.resize = function (event) {
         var one = event.height / UI.HEIGHT;
-
-        this.gravity = Math.floor(one * GamePlay.GRAVITY);
 
         var widthHalf = UI.WIDTH / 2 * one;
         var screenWidthHalf = event.width / 2;
@@ -73,27 +74,37 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     World.prototype.updatePlayerMovement = function () {
         var player = this.player;
 
-        var forceX = 0;
-        var forceY = 0;
+        if (this.player.direction < 0) {
+            this.player.direction += this.__turn;
+        } else if (this.player.direction > this.__turn) {
+            this.player.direction -= this.__turn;
+        }
 
-        // forceY += this.gravity;
+        var diff = Math.abs(this.player.rotation - this.player.direction);
+        if (diff > 0.0175) {
+            if (this.player.rotation > this.player.direction) {
+                if (diff > Math.PI) {
+                    this.player.direction -= 0.02;
+                } else {
+                    this.player.direction += 0.02;
+                }
+            } else {
+                if (diff > Math.PI) {
+                    this.player.direction += 0.02;
+                } else {
+                    this.player.direction -= 0.02;
+                }
+            }
+        }
 
-        player.forceX *= airResistance;
-        player.forceY *= airResistance;
-
-        forceX = Vectors.getX(0, this.currentSpeed, this.player.rotation);
-        forceY = Vectors.getY(0, this.currentSpeed, this.player.rotation);
+        var forceX = Vectors.getX(0, this.currentSpeed, this.player.direction);
+        var forceY = Vectors.getY(0, this.currentSpeed, this.player.direction);
 
         forceX += player.forceX;
         forceY += player.forceY;
 
         player.lastX = player.x;
         player.lastY = player.y;
-
-        // acceleration
-        // var angle = player.rotation;
-        // var speedX = Vectors.getX(0, GamePlay.BOAT_SPEED, angle);
-        // var speedY = Vectors.getY(0, GamePlay.BOAT_SPEED, angle);
 
         forceX = Math.round(forceX * 100) / 100;
         forceY = Math.round(forceY * 100) / 100;

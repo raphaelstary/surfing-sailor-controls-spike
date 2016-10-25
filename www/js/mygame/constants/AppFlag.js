@@ -2,7 +2,7 @@ G.AppFlag = {
     DEBUG: true,
 
     BALL_SHADOW: false,
-    PLAYER_SHADOW: true,
+    PLAYER_SHADOW: false,
     BALL_SCALE: false,
     BALL_HIGHLIGHT: false,
     WALL_SCALE: false,
