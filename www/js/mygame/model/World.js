@@ -1,7 +1,7 @@
 G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     "use strict";
 
-    function World(device, camera, shaker, view, player, scenery, balls, obstacles, paddleHitFn, gameOverFn) {
+    function World(device, camera, shaker, view, player, scenery, balls, obstacles, gameOverFn, speedometer) {
         this.scenery = scenery;
         this.player = player;
         this.balls = balls;
@@ -11,8 +11,10 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         this.shaker = shaker;
         this.view = view;
 
-        this.paddleHitFn = paddleHitFn;
+        this.paddleHitFn = function () {
+        };
         this.gameOverFn = gameOverFn;
+        this.speedometer = speedometer;
 
         this.resize(device);
     }

@@ -7,5 +7,8 @@ H5.Key = {
     SPACE: 32,
     CTRL: 17,
     ALT: 18,
-    ESC: 27
+    ESC: 27,
+
+    A: 65,
+    Q: 81
 };

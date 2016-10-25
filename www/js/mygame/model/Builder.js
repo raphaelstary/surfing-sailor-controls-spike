@@ -2,7 +2,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
     Event, subtract, AppFlag, multiply, Sound) {
     "use strict";
 
-    function Builder(services, scenery, balls, obstacles, camera, counter) {
+    function Builder(services, scenery, balls, obstacles, camera, speedometer) {
         this.stage = services.stage;
         this.timer = services.timer;
         this.events = services.events;
@@ -15,7 +15,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         this.obstacles = obstacles;
 
         this.camera = camera;
-        this.counter = counter;
+        this.counter = speedometer;
 
         this.resize(services.device);
 

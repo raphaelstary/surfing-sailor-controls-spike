@@ -1,4 +1,5 @@
-G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGamePad, createWorld, AppFlag, Sound) {
+G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGamePad, createWorld, AppFlag, Sound,
+    Font) {
     "use strict";
 
     /** @property counter */
@@ -41,8 +42,9 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
         var isOver = false;
         var score = 0;
 
-        this.counter.show = false;
-        this.counter.setText('0');
+        // this.counter.show = false;
+        this.counter.setText('slow');
+        this.counter.setSize(Font._15);
         this.counter.setPosition(Width.HALF, Height.HALF);
 
         var self = this;
@@ -138,4 +140,5 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
     };
 
     return Game;
-})(H5.Width, H5.Height, H5.Event, G.installPlayerKeyBoard, G.installPlayerGamePad, G.createWorld, G.AppFlag, G.Sound);
+})(H5.Width, H5.Height, H5.Event, G.installPlayerKeyBoard, G.installPlayerGamePad, G.createWorld, G.AppFlag, G.Sound,
+    H5.Font);

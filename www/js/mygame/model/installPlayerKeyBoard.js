@@ -7,6 +7,9 @@ G.installPlayerKeyBoard = (function (Event, Key) {
         var downPressed = false;
         var upPressed = false;
 
+        var speedUpPressed = false;
+        var speedDownPressed = false;
+
         return events.subscribe(Event.KEY_BOARD, function (keyBoard) {
             if (keyBoard[Key.LEFT] && !leftPressed) {
                 leftPressed = true;
@@ -40,7 +43,13 @@ G.installPlayerKeyBoard = (function (Event, Key) {
                 playerController.handleUpKeyUp();
             }
 
-
+            if (keyBoard[Key.Q] && !upPressed) {
+                upPressed = true;
+                playerController.handleUpKeyDown();
+            } else if (!keyBoard[Key.UP] && upPressed) {
+                upPressed = false;
+                playerController.handleUpKeyUp();
+            }
         });
     }
 

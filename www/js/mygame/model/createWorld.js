@@ -1,7 +1,7 @@
 G.createWorld = (function (Builder, PlayerController, World, Camera, createViewPort, ScreenShaker) {
     "use strict";
 
-    function createWorld(services, paddleHitFn, gameOverFn, counter) {
+    function createWorld(services, gameOverFn, speedometer) {
 
         var shaker = new ScreenShaker(services.device);
         var viewPort = createViewPort(services.stage);
@@ -12,7 +12,7 @@ G.createWorld = (function (Builder, PlayerController, World, Camera, createViewP
         var scenery = [];
         var balls = [];
         var obstacles = [];
-        var builder = new Builder(services, scenery, balls, obstacles, camera, counter);
+        var builder = new Builder(services, scenery, balls, obstacles, camera, speedometer);
 
         function initLevel() {
             var player = builder.createPlayer();
@@ -26,7 +26,7 @@ G.createWorld = (function (Builder, PlayerController, World, Camera, createViewP
         var playerController = new PlayerController(services.device, player, builder);
 
         return {
-            world: new World(services.device, camera, shaker, builder, player, scenery, balls, obstacles, paddleHitFn, gameOverFn),
+            world: new World(services.device, camera, shaker, builder, player, scenery, balls, obstacles, gameOverFn, speedometer),
             builder: builder,
             controller: playerController,
             camera: camera,
