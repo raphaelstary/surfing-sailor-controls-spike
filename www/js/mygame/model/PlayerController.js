@@ -26,6 +26,8 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
     };
 
     PlayerController.prototype.update = function () {
+        this.player.lastRotation = this.player.rotation;
+
         if (this.__leftPressed) {
             this.left();
         }

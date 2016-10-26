@@ -19,9 +19,13 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
 
         this.currentSpeed = GamePlay.SLOW_SPEED;
         this.__turn = Math.PI * 2;
+
+        this.__speedApplier = 0;
     }
 
     World.prototype.speedUp = function () {
+        this.__speedApplier = 0;
+
         if (this.currentSpeed == GamePlay.SLOW_SPEED) {
             this.currentSpeed = GamePlay.MEDIUM_SPEED;
         } else if (this.currentSpeed == GamePlay.MEDIUM_SPEED) {
@@ -30,6 +34,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     };
 
     World.prototype.speedDown = function () {
+        this.__speedApplier = 0;
+
         if (this.currentSpeed == GamePlay.FAST_SPEED) {
             this.currentSpeed = GamePlay.MEDIUM_SPEED;
         } else if (this.currentSpeed == GamePlay.MEDIUM_SPEED) {
@@ -76,7 +82,22 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
 
         if (this.currentSpeed == GamePlay.FAST_SPEED) {
             this.player.direction = this.player.rotation;
+
+            if (this.player.lastRotation == this.player.rotation) {
+                this.__speedApplier += 0.1;
+                if (this.__speedApplier > 4)
+                    this.__speedApplier = 4;
+            } else {
+                this.__speedApplier -= 0.05;
+                if (this.__speedApplier < -2) {
+                    this.__speedApplier = -2;
+
+                    this.view.speedDown();
+                    this.speedDown();
+                }
+            }
         } else {
+            // this.__speedApplier = 0;
 
             if (this.player.direction < 0) {
                 this.player.direction += this.__turn;
@@ -105,8 +126,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             }
         }
 
-        var forceX = Vectors.getX(0, this.currentSpeed, this.player.direction);
-        var forceY = Vectors.getY(0, this.currentSpeed, this.player.direction);
+        var forceX = Vectors.getX(0, this.currentSpeed + this.__speedApplier, this.player.direction);
+        var forceY = Vectors.getY(0, this.currentSpeed + this.__speedApplier, this.player.direction);
 
         forceX += player.forceX;
         forceY += player.forceY;
