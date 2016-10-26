@@ -90,7 +90,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
                 if (this.__speedApplier > 4)
                     this.__speedApplier = 4;
             } else {
-                this.__speedApplier -= 0.05;
+                this.__speedApplier -= 0.1;
                 if (GamePlay.FAST_SPEED + this.__speedApplier <= GamePlay.MEDIUM_SPEED) {
                     this.view.speedDown();
                     this.speedDown();

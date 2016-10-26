@@ -9,7 +9,7 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
 
         this.__1 = 0.03;
         this.__2 = 0.04;
-        this.__3 = 0.05;
+        this.__3 = 0.08;
 
         this.__leftPressed = false;
         this.__rightPressed = false;
