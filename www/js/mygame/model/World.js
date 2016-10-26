@@ -74,25 +74,33 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     World.prototype.updatePlayerMovement = function () {
         var player = this.player;
 
-        if (this.player.direction < 0) {
-            this.player.direction += this.__turn;
-        } else if (this.player.direction > this.__turn) {
-            this.player.direction -= this.__turn;
-        }
+        if (this.currentSpeed == GamePlay.FAST_SPEED) {
+            this.player.direction = this.player.rotation;
+        } else {
 
-        var diff = Math.abs(this.player.rotation - this.player.direction);
-        if (diff > 0.0175) {
-            if (this.player.rotation > this.player.direction) {
-                if (diff > Math.PI) {
-                    this.player.direction -= 0.02;
+            if (this.player.direction < 0) {
+                this.player.direction += this.__turn;
+            } else if (this.player.direction > this.__turn) {
+                this.player.direction -= this.__turn;
+            }
+
+            var delta = Math.abs(this.player.rotation - this.player.direction);
+            var oneDegree = 0.0175;
+            var aboutOneDegree = 0.02;
+
+            if (delta > oneDegree) {
+                if (this.player.rotation > this.player.direction) {
+                    if (delta > Math.PI) {
+                        this.player.direction -= aboutOneDegree;
+                    } else {
+                        this.player.direction += aboutOneDegree;
+                    }
                 } else {
-                    this.player.direction += 0.02;
-                }
-            } else {
-                if (diff > Math.PI) {
-                    this.player.direction += 0.02;
-                } else {
-                    this.player.direction -= 0.02;
+                    if (delta > Math.PI) {
+                        this.player.direction += aboutOneDegree;
+                    } else {
+                        this.player.direction -= aboutOneDegree;
+                    }
                 }
             }
         }
