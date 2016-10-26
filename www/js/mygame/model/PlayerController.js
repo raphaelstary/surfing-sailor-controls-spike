@@ -27,6 +27,7 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
 
     PlayerController.prototype.update = function () {
         this.player.lastRotation = this.player.rotation;
+        this.player.isMaxRotation = false;
 
         if (this.__leftPressed) {
             this.left();
@@ -107,8 +108,10 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
         if (this.player.rotation < 0)
             this.player.rotation += this.__turn;
 
-        if (this.__greaterThanMaxTurn())
+        if (this.__greaterThanMaxTurn()) {
             this.player.rotation = lastRotation;
+            this.player.isMaxRotation = true;
+        }
     };
 
     PlayerController.prototype.right = function () {
@@ -118,8 +121,10 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
         if (this.player.rotation > this.__turn)
             this.player.rotation -= this.__turn;
 
-        if (this.__greaterThanMaxTurn())
+        if (this.__greaterThanMaxTurn()) {
             this.player.rotation = lastRotation;
+            this.player.isMaxRotation = true;
+        }
     };
 
     PlayerController.prototype.up = function () {

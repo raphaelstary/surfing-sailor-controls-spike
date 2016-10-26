@@ -59,7 +59,7 @@ G.Game = (function (Width, Height, Event, installPlayerKeyBoard, installPlayerGa
             }, 5);
         }
 
-        var wrapper = createWorld(this.services, gameOver, this.counter);
+        var wrapper = createWorld(this.services, gameOver, this.counter, this.debugSpeed);
 
         this.camera = this.events.subscribe(Event.TICK_CAMERA, wrapper.world.updateCamera.bind(wrapper.world));
         this.world = wrapper.world;

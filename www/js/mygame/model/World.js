@@ -1,7 +1,7 @@
 G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     "use strict";
 
-    function World(device, camera, shaker, view, player, scenery, balls, obstacles, gameOverFn) {
+    function World(device, camera, shaker, view, player, scenery, balls, obstacles, gameOverFn, debugSpeed) {
         this.scenery = scenery;
         this.player = player;
         this.balls = balls;
@@ -14,6 +14,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         this.paddleHitFn = function () {
         };
         this.gameOverFn = gameOverFn;
+
+        this.debugSpeed = debugSpeed;
 
         this.resize(device);
 
@@ -83,21 +85,32 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         if (this.currentSpeed == GamePlay.FAST_SPEED) {
             this.player.direction = this.player.rotation;
 
-            if (this.player.lastRotation == this.player.rotation) {
+            if (this.player.lastRotation == this.player.rotation && !this.player.isMaxRotation) {
                 this.__speedApplier += 0.1;
                 if (this.__speedApplier > 4)
                     this.__speedApplier = 4;
             } else {
                 this.__speedApplier -= 0.05;
-                if (this.__speedApplier < -2) {
-                    this.__speedApplier = -2;
-
+                if (GamePlay.FAST_SPEED + this.__speedApplier <= GamePlay.MEDIUM_SPEED) {
                     this.view.speedDown();
                     this.speedDown();
                 }
             }
         } else {
-            // this.__speedApplier = 0;
+            if (this.currentSpeed == GamePlay.MEDIUM_SPEED) {
+
+                if (this.player.lastRotation == this.player.rotation && !this.player.isMaxRotation) {
+                    this.__speedApplier += 0.04;
+                    if (GamePlay.MEDIUM_SPEED + this.__speedApplier >= GamePlay.FAST_SPEED) {
+                        this.view.speedUp();
+                        this.speedUp();
+                    }
+                } else {
+                    this.__speedApplier -= 0.02;
+                    if (this.__speedApplier < -2)
+                        this.__speedApplier = -2;
+                }
+            }
 
             if (this.player.direction < 0) {
                 this.player.direction += this.__turn;
@@ -125,6 +138,13 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
                 }
             }
         }
+
+        this.__speedApplier = Math.round(this.__speedApplier * 100) / 100;
+        this.player.direction = Math.round(this.player.direction * 10000) / 10000;
+        this.player.rotation = Math.round(this.player.rotation * 10000) / 10000;
+
+        if (this.debugSpeed)
+            this.debugSpeed.setText(this.__speedApplier + ' ++');
 
         var forceX = Vectors.getX(0, this.currentSpeed + this.__speedApplier, this.player.direction);
         var forceY = Vectors.getY(0, this.currentSpeed + this.__speedApplier, this.player.direction);

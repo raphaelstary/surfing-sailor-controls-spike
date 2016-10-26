@@ -83,6 +83,16 @@ G.installMyScenes = (function (Scenes, Start, Tutorial, Game, Score, MVVMScene, 
             var fps = services.stage.createText('0').setPosition(Width.get(1920, 1880), Height.get(1080, 1040))
                 .setSize(Font._60).setZIndex(11).setColor('white');
 
+            var speedApplier = services.stage.createText('0')
+                .setPosition(Width.get(1920, 1880), Height.get(1080, 1000))
+                .setSize(Font._60)
+                .setZIndex(11)
+                .setColor('white');
+
+            game.debugSpeed = speedApplier;
+            // var fps = services.stage.createText('0').setPosition(Width.get(1920, 1880), Height.get(1080, 1040))
+            //     .setSize(Font._60).setZIndex(11).setColor('white');
+
             services.events.subscribe(Event.TICK_DRAW, function () {
                 ms.data.msg = Stats.getMs().toString() + " ms";
                 fps.data.msg = Stats.getFps().toString() + " fps";
