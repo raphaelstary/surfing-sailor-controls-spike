@@ -83,8 +83,19 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
 
     PlayerController.prototype.__greaterThanMaxTurn = function () {
         var maxTurn = Math.PI / 4;
-        var diff = Math.abs(this.player.rotation - this.player.direction);
-        return diff < Math.PI && diff > maxTurn;
+        var minusMaxTurn = 7 * Math.PI / 4;
+
+        var a = this.player.direction;
+        var b = this.player.rotation;
+
+        if ((a > minusMaxTurn && b < maxTurn) || (b > minusMaxTurn && a < maxTurn)) {
+            var aDash = Vectors.normalizeAngle(a);
+            var bDash = Vectors.normalizeAngle(b);
+            return Math.abs(bDash - aDash) > maxTurn;
+        }
+
+        var diff = Math.abs(b - a);
+        return diff > maxTurn;
     };
 
     PlayerController.prototype.left = function () {

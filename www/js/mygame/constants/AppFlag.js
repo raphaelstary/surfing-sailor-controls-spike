@@ -1,5 +1,6 @@
 G.AppFlag = {
     DEBUG: true,
+    DEBUG_FORCE: false,
 
     BALL_SHADOW: false,
     PLAYER_SHADOW: false,

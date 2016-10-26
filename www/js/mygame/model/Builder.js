@@ -153,7 +153,7 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         player.show = false;
         player.drawable = this.__createPlayer(UI.PLAYER_COLOR).setPosition(Width.HALF, Height.get(6, 5));
 
-        if (AppFlag.DEBUG) {
+        if (AppFlag.DEBUG_FORCE) {
             player.currentVelocity = this.stage.createLine().setColor('green');
             player.currentVelocity.anchorOffsetX = 50;
             player.desiredVelocity = this.stage.createLine().setColor('red');
