@@ -1,4 +1,4 @@
-G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
+G.PlayerController = (function (UI, GamePlay, Math, Vectors, Date) {
     "use strict";
 
     function PlayerController(device, player, builder, world) {
@@ -17,6 +17,9 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
         this.__upPressed = false;
 
         this.__turn = Math.PI * 2;
+
+        this.__history = [];
+        this.__isCombo = false;
     }
 
     PlayerController.prototype.resize = function (event) {
@@ -29,18 +32,32 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
         this.player.lastRotation = this.player.rotation;
         this.player.isMaxRotation = false;
 
+        if (this.__isCombo) {
+            this.__doCombo();
+            return;
+        }
+
         if (this.__leftPressed) {
             this.left();
-        }
-        if (this.__rightPressed) {
+        } else if (this.__rightPressed) {
             this.right();
         }
+
         if (this.__downPressed) {
             this.down();
-        }
-        if (this.__upPressed) {
+        } else if (this.__upPressed) {
             this.up();
         }
+    };
+
+    PlayerController.prototype.__doCombo = function () {
+        this.__isCombo = false;
+
+        this.player.isSliding = true;
+        this.player.rotation += Math.PI / 2;
+
+        if (this.player.rotation > this.__turn)
+            this.player.rotation -= this.__turn;
     };
 
     PlayerController.prototype.handleLeftKeyDown = function () {
@@ -111,6 +128,8 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
         if (this.__greaterThanMaxTurn()) {
             this.player.rotation = lastRotation;
             this.player.isMaxRotation = true;
+        } else {
+            this.__registerTurn('left');
         }
     };
 
@@ -124,6 +143,36 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
         if (this.__greaterThanMaxTurn()) {
             this.player.rotation = lastRotation;
             this.player.isMaxRotation = true;
+        } else {
+            this.__registerTurn('right');
+        }
+    };
+
+    PlayerController.prototype.__registerTurn = function (turn) {
+        if (this.world.currentSpeed != GamePlay.FAST_SPEED)
+            return;
+
+        this.__history.push({
+            time: Date.now(),
+            turn: turn
+        });
+
+        var now = Date.now();
+        this.__history = this.__history.filter(function (elem) {
+            return now - elem.time < 500;
+        });
+
+        var lastTurn = this.__history[0] && this.__history[0].turn;
+        var changes = 0;
+        this.__history.forEach(function (elem) {
+            if (lastTurn != elem.turn)
+                changes++;
+            lastTurn = elem.turn;
+        });
+
+        if (changes >= 2) {
+            this.__history = [];
+            this.__isCombo = true;
         }
     };
 
@@ -146,4 +195,4 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors) {
     };
 
     return PlayerController;
-})(G.UI, G.GamePlay, Math, H5.Vectors);
+})(G.UI, G.GamePlay, Math, H5.Vectors, Date);

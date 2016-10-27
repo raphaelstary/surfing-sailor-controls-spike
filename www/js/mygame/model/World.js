@@ -82,7 +82,9 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     World.prototype.updatePlayerMovement = function () {
         var player = this.player;
 
-        if (this.currentSpeed == GamePlay.FAST_SPEED) {
+        if (this.player.isSliding) {
+
+        } else if (this.currentSpeed == GamePlay.FAST_SPEED) {
             this.player.direction = this.player.rotation;
 
             if (this.player.lastRotation == this.player.rotation && !this.player.isMaxRotation) {
