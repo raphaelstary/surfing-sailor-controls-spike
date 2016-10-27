@@ -58,6 +58,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     };
 
     World.prototype.updateCamera = function () {
+        this.camera.move(this.player);
+
         this.scenery.forEach(this.__updatePosition, this);
         this.__updatePosition(this.player);
         this.balls.forEach(this.__updatePosition, this);

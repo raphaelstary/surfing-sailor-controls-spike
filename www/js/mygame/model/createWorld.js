@@ -5,7 +5,8 @@ G.createWorld = (function (Builder, PlayerController, World, Camera, createViewP
 
         var shaker = new ScreenShaker(services.device);
         var viewPort = createViewPort(services.stage);
-        var camera = new Camera(viewPort);
+
+        var camera = new Camera(viewPort, viewPort.x, viewPort.y);
 
         shaker.add(viewPort);
 
