@@ -34,7 +34,13 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     };
 
     World.prototype.forwardEdge = function () {
-
+        if (this.__speedApplier > -1) {
+            this.player.isSliding = false;
+            this.player.rotation -= Math.PI / 4;
+        } else {
+            this.player.isJumping = true;
+            this.__speedApplier = 0;
+        }
     };
 
     World.prototype.speedUp = function () {
@@ -100,7 +106,9 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     World.prototype.updatePlayerMovement = function () {
         var player = this.player;
 
-        if (this.player.isSliding) {
+        if (this.player.isJumping) {
+
+        } else if (this.player.isSliding) {
 
             if (!this.__isSpeedDown && this.__speedApplier < 0) {
                 this.__speedApplier += 0.1;

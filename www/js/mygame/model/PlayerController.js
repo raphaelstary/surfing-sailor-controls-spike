@@ -57,6 +57,7 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors, Date) {
 
         this.player.isSliding = true;
         this.player.rotation += Math.PI / 2;
+        this.player.startedSliding = Date.now();
 
         if (this.player.rotation > this.__turn)
             this.player.rotation -= this.__turn;
@@ -121,8 +122,16 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors, Date) {
     };
 
     PlayerController.prototype.left = function () {
+        if (this.player.isJumping) {
+            this.player.rotation -= this.__2;
+            if (this.player.rotation < 0)
+                this.player.rotation += this.__turn;
+            return;
+        }
+
         if (this.player.isSliding) {
-            this.world.forwardEdge();
+            if (Date.now() - this.player.startedSliding > 500)
+                this.world.forwardEdge();
             return;
         }
 
@@ -141,8 +150,16 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors, Date) {
     };
 
     PlayerController.prototype.right = function () {
+        if (this.player.isJumping) {
+            this.player.rotation += this.__2;
+            if (this.player.rotation > this.__turn)
+                this.player.rotation -= this.__turn;
+            return;
+        }
+
         if (this.player.isSliding) {
-            this.world.backEdge();
+            if (Date.now() - this.player.startedSliding > 500)
+                this.world.backEdge();
             return;
         }
 
