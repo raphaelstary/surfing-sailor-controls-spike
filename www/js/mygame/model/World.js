@@ -23,7 +23,19 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         this.__turn = Math.PI * 2;
 
         this.__speedApplier = 0;
+        this.__isSpeedDown = false;
     }
+
+    World.prototype.backEdge = function () {
+        this.__isSpeedDown = true;
+        this.__speedApplier -= 0.05;
+        if (this.__speedApplier < -4)
+            this.__speedApplier = -4;
+    };
+
+    World.prototype.forwardEdge = function () {
+
+    };
 
     World.prototype.speedUp = function () {
         this.__speedApplier = 0;
@@ -81,10 +93,19 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         this.endY = event.height - tile;
     };
 
+    World.prototype.activateCombo = function () {
+        this.__speedApplier = 0;
+    };
+
     World.prototype.updatePlayerMovement = function () {
         var player = this.player;
 
         if (this.player.isSliding) {
+
+            if (!this.__isSpeedDown && this.__speedApplier < 0) {
+                this.__speedApplier += 0.1;
+            }
+            this.__isSpeedDown = false;
 
         } else if (this.currentSpeed == GamePlay.FAST_SPEED) {
             this.player.direction = this.player.rotation;

@@ -53,6 +53,8 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors, Date) {
     PlayerController.prototype.__doCombo = function () {
         this.__isCombo = false;
 
+        this.world.activateCombo();
+
         this.player.isSliding = true;
         this.player.rotation += Math.PI / 2;
 
@@ -119,6 +121,11 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors, Date) {
     };
 
     PlayerController.prototype.left = function () {
+        if (this.player.isSliding) {
+            this.world.forwardEdge();
+            return;
+        }
+
         var lastRotation = this.player.rotation;
 
         this.player.rotation -= this.__getRotationValue();
@@ -134,6 +141,11 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors, Date) {
     };
 
     PlayerController.prototype.right = function () {
+        if (this.player.isSliding) {
+            this.world.backEdge();
+            return;
+        }
+
         var lastRotation = this.player.rotation;
 
         this.player.rotation += this.__getRotationValue();
