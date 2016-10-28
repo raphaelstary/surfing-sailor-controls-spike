@@ -34,8 +34,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag, Date) {
     };
 
     World.prototype.forwardEdge = function () {
+        this.player.isSliding = false;
         if (this.__speedApplier > -1) {
-            this.player.isSliding = false;
             this.player.rotation -= Math.PI / 4;
         } else {
             this.player.isJumping = true;
@@ -118,7 +118,7 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag, Date) {
                 this.player.showShadow = false;
                 this.player.shadow.show = false;
                 this.player.rotation = this.player.direction;
-                this.player.endedJumpingCoolDown = 30;
+                this.player.endedJumpingCoolDown = 15;
             }
 
         } else if (this.player.isSliding) {
