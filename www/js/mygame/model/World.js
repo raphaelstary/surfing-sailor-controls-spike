@@ -1,4 +1,4 @@
-G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
+G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag, Date) {
     "use strict";
 
     function World(device, camera, shaker, view, player, scenery, balls, obstacles, gameOverFn, debugSpeed) {
@@ -39,6 +39,9 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             this.player.rotation -= Math.PI / 4;
         } else {
             this.player.isJumping = true;
+            this.player.startedJumping = Date.now();
+            this.player.jumpingTimer = this.__speedApplier * -25;
+            this.player.showShadow = true;
             this.__speedApplier = 0;
         }
     };
@@ -73,6 +76,8 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
             this.camera.calcScreenPosition(entity, entity.currentVelocity, entity.direction);
         if (entity.desiredVelocity)
             this.camera.calcScreenPosition(entity, entity.desiredVelocity);
+        if (entity.shadow && entity.showShadow)
+            this.camera.calcScreenPosition(entity, entity.shadow);
     };
 
     World.prototype.updateCamera = function () {
@@ -107,6 +112,14 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
         var player = this.player;
 
         if (this.player.isJumping) {
+
+            if (--this.player.jumpingTimer <= 0) {
+                this.player.isJumping = false;
+                this.player.showShadow = false;
+                this.player.shadow.show = false;
+                this.player.rotation = this.player.direction;
+                this.player.endedJumpingCoolDown = 30;
+            }
 
         } else if (this.player.isSliding) {
 
@@ -308,4 +321,4 @@ G.World = (function (Math, Object, Vectors, UI, GamePlay, AppFlag) {
     };
 
     return World;
-})(Math, Object, H5.Vectors, G.UI, G.GamePlay, G.AppFlag);
+})(Math, Object, H5.Vectors, G.UI, G.GamePlay, G.AppFlag, Date);

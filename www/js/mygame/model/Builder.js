@@ -152,6 +152,12 @@ G.Builder = (function (Vectors, range, UI, GamePlay, Math, Width, Height, wrap, 
         var player = this.__createPlayer(UI.PLAYER_COLOR).setPosition(Width.HALF, Height.get(6, 5)).setRotation(0);
         player.show = false;
         player.drawable = this.__createPlayer(UI.PLAYER_COLOR).setPosition(Width.HALF, Height.get(6, 5));
+        player.shadow = this.__createPlayer(UI.BALL_SHADOW_COLOR).setPosition(Width.HALF, Height.get(6, 5))
+            .setZIndex(2);
+        player.shadow.anchorOffsetX = 15;
+        player.shadow.anchorOffsetY = 15;
+        player.shadow.show = false;
+        player.showShadow = false;
 
         if (AppFlag.DEBUG_FORCE) {
             player.currentVelocity = this.stage.createLine().setColor('green');

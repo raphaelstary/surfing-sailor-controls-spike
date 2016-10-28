@@ -32,6 +32,11 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors, Date) {
         this.player.lastRotation = this.player.rotation;
         this.player.isMaxRotation = false;
 
+        if (this.player.endedJumpingCoolDown > 0) {
+            this.player.endedJumpingCoolDown--;
+            return;
+        }
+
         if (this.__isCombo) {
             this.__doCombo();
             return;
@@ -123,9 +128,13 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors, Date) {
 
     PlayerController.prototype.left = function () {
         if (this.player.isJumping) {
-            this.player.rotation -= this.__2;
-            if (this.player.rotation < 0)
-                this.player.rotation += this.__turn;
+            if (Date.now() - this.player.startedJumping > 250) {
+                this.player.rotation -= this.__3;
+                if (this.player.rotation < 0)
+                    this.player.rotation += this.__turn;
+            } else {
+
+            }
             return;
         }
 
@@ -151,9 +160,13 @@ G.PlayerController = (function (UI, GamePlay, Math, Vectors, Date) {
 
     PlayerController.prototype.right = function () {
         if (this.player.isJumping) {
-            this.player.rotation += this.__2;
-            if (this.player.rotation > this.__turn)
-                this.player.rotation -= this.__turn;
+            if (Date.now() - this.player.startedJumping > 250) {
+                this.player.rotation += this.__3;
+                if (this.player.rotation > this.__turn)
+                    this.player.rotation -= this.__turn;
+            } else {
+
+            }
             return;
         }
 
